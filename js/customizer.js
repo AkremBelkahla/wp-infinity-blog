@@ -5,6 +5,12 @@
 (function($) {
     'use strict';
 
+    // Vérifier si l'objet wp est disponible (nécessaire pour le customizer)
+    if (typeof wp === 'undefined' || typeof wp.customize === 'undefined') {
+        console.warn('WordPress Customizer API not available. Customizer features disabled.');
+        return;
+    }
+
     // Sélecteurs CSS pour une meilleure maintenabilité
     const selectors = {
         body: 'body',

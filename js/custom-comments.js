@@ -15,6 +15,20 @@
 (function($) {
     'use strict';
 
+    // Vérifier si l'objet de localisation est disponible
+    const commentsConfig = window.infinity_blog_comments || {
+        ajax_url: window.ajaxurl || '/wp-admin/admin-ajax.php',
+        nonce: '',
+        comments_per_page: 50,
+        is_singular: '0',
+        post_id: 0,
+        text: {
+            submitting: 'Submitting...',
+            submit_error: 'An error occurred. Please try again.',
+            submit_success: 'Thank you for your comment!'
+        }
+    };
+
     // État global de l'application
     const state = {
         isSubmitting: false,
@@ -24,7 +38,7 @@
         currentEditId: 0,
         commentCount: parseInt($('#comments-title .count').text() || '0'),
         commentPage: 1,
-        commentsPerPage: parseInt(infinity_blog_comments.comments_per_page || '50')
+        commentsPerPage: parseInt(commentsConfig.comments_per_page || '50')
     };
 
     // Initialisation des événements
@@ -543,6 +557,47 @@
                     loadMoreComments();
                 }
             });
+        }
+    }
+    
+    // Fonction pour mettre à jour la prévisualisation du commentaire
+    function updatePreview() {
+        const $commentField = $('#comment');
+        const $previewArea = $('#comment-preview');
+        
+        if ($commentField.length && $previewArea.length) {
+            // Convertir le markdown en HTML (simplifié pour l'exemple)
+            // Dans une implémentation réelle, utilisez une bibliothèque comme marked.js
+            const text = $commentField.val();
+            const html = text
+                .replace(/\n\n/g, '</p><p>')  // Paragraphes
+                .replace(/\n/g, '<br>')         // Sauts de ligne
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')  // Gras
+                .replace(/\*(.*?)\*/g, '<em>$1</em>');              // Italique
+            
+            $previewArea.html(html || '<em>Aucun contenu à prévisualiser</em>');
+        }
+    }
+    
+    // Fonction pour basculer entre l'éditeur et l'aperçu
+    function togglePreview(show) {
+        const $tabs = $('.comment-tabs');
+        const $editorTab = $tabs.find('a[href="#comment-editor"]');
+        const $previewTab = $tabs.find('a[href="#comment-preview"]');
+        const $editor = $('#comment-editor');
+        const $preview = $('#comment-preview');
+        
+        if (show) {
+            updatePreview();
+            $editorTab.parent().removeClass('active');
+            $previewTab.parent().addClass('active');
+            $editor.hide();
+            $preview.show();
+        } else {
+            $previewTab.parent().removeClass('active');
+            $editorTab.parent().addClass('active');
+            $preview.hide();
+            $editor.show();
         }
     }
     

@@ -74,14 +74,49 @@ function infinity_blog_scripts() {
     // Theme stylesheet (style.css à la racine du thème)
     wp_enqueue_style( 'infinity-blog-style', get_stylesheet_uri(), array(), INFINITY_BLOG_VERSION );
     
-    // Enqueue custom JS files
-    wp_enqueue_script( 'infinity-blog-custom-comments', get_template_directory_uri() . '/js/custom-comments.js', array( 'jquery' ), INFINITY_BLOG_VERSION, true );
-    wp_enqueue_script( 'infinity-blog-customizer', get_template_directory_uri() . '/js/customizer.js', array( 'jquery' ), INFINITY_BLOG_VERSION, true );
+    // Enqueue custom JS files with proper dependencies
+    wp_enqueue_script( 'infinity-blog-custom-comments', 
+        get_template_directory_uri() . '/js/custom-comments.js', 
+        array( 'jquery' ), 
+        INFINITY_BLOG_VERSION, 
+        true 
+    );
     
-    // Suppression des références aux fichiers manquants
-    // wp_enqueue_style( 'tailwind', get_template_directory_uri() . '/dist/css/style.css', array(), INFINITY_BLOG_VERSION );
-    // wp_enqueue_script( 'splide', get_template_directory_uri() . '/src/js/splide.min.js', array(), '3.6.9', true );
-    // wp_enqueue_script( 'infinity-blog-script', get_template_directory_uri() . '/dist/js/script.js', array( 'jquery' ), INFINITY_BLOG_VERSION, true );
+    // Localize script with data needed for comments
+    $comments_data = array(
+        'ajax_url' => admin_url( 'admin-ajax.php' ),
+        'nonce' => wp_create_nonce( 'infinity_blog_comments_nonce' ),
+        'comments_per_page' => get_option( 'comments_per_page' ),
+        'is_singular' => is_singular() ? '1' : '0',
+        'post_id' => get_the_ID(),
+        'text' => array(
+            'submitting' => __( 'Submitting...', 'infinity-blog' ),
+            'submit_error' => __( 'An error occurred. Please try again.', 'infinity-blog' ),
+            'submit_success' => __( 'Thank you for your comment!', 'infinity-blog' ),
+        )
+    );
+    
+    wp_localize_script( 'infinity-blog-custom-comments', 'infinity_blog_comments', $comments_data );
+    
+    // Enqueue navigation script
+    wp_enqueue_script(
+        'infinity-blog-navigation',
+        get_template_directory_uri() . '/js/navigation.js',
+        array(),
+        INFINITY_BLOG_VERSION,
+        true
+    );
+    
+    // Load customizer script only in customizer preview
+    if ( is_customize_preview() ) {
+        wp_enqueue_script( 
+            'infinity-blog-customizer', 
+            get_template_directory_uri() . '/js/customizer.js', 
+            array( 'jquery', 'customize-preview', 'customize-selective-refresh' ), 
+            INFINITY_BLOG_VERSION, 
+            true 
+        );
+    }
 
     if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
         wp_enqueue_script( 'comment-reply' );
