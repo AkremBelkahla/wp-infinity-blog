@@ -98,14 +98,33 @@ function infinity_blog_scripts() {
     
     wp_localize_script( 'infinity-blog-custom-comments', 'infinity_blog_comments', $comments_data );
     
+    // Enqueue mobile menu script
+    wp_enqueue_script(
+        'infinity-blog-mobile-menu',
+        get_template_directory_uri() . '/js/mobile-menu.js',
+        array('jquery'),
+        INFINITY_BLOG_VERSION,
+        true
+    );
+    
+    // Localize script with translated strings
+    $mobile_menu_data = array(
+        'toggle_submenu' => __( 'Toggle submenu', 'infinity-blog' ),
+    );
+    
+    wp_localize_script( 'infinity-blog-mobile-menu', 'infinity_blog_vars', $mobile_menu_data );
+    
     // Enqueue navigation script
     wp_enqueue_script(
         'infinity-blog-navigation',
         get_template_directory_uri() . '/js/navigation.js',
-        array(),
+        array('jquery'),
         INFINITY_BLOG_VERSION,
         true
     );
+    
+    // Add dashicons for frontend
+    wp_enqueue_style( 'dashicons' );
     
     // Load customizer script only in customizer preview
     if ( is_customize_preview() ) {
@@ -181,6 +200,35 @@ add_action( 'widgets_init', 'infinity_blog_widgets_init' );
 
 // Charger la classe de menu personnalisée
 require get_template_directory() . '/inc/class-walker-nav-menu.php';
+
+/**
+ * Ajoute les classes nécessaires aux éléments de menu
+ */
+function infinity_blog_nav_menu_css_class($classes, $item, $args, $depth) {
+    // Ajoute une classe pour les éléments de menu avec des sous-menus
+    if (in_array('menu-item-has-children', $classes)) {
+        $classes[] = 'has-submenu';
+    }
+    
+    // Ajoute une classe pour le niveau de profondeur
+    $classes[] = 'menu-item-depth-' . $depth;
+    
+    return $classes;
+}
+add_filter('nav_menu_css_class', 'infinity_blog_nav_menu_css_class', 10, 4);
+
+/**
+ * Ajoute les attributs ARIA aux liens de menu
+ */
+function infinity_blog_nav_menu_link_attributes($atts, $item, $args, $depth) {
+    if (in_array('menu-item-has-children', $item->classes)) {
+        $atts['aria-haspopup'] = 'true';
+        $atts['aria-expanded'] = 'false';
+    }
+    
+    return $atts;
+}
+add_filter('nav_menu_link_attributes', 'infinity_blog_nav_menu_link_attributes', 10, 4);
 
 // Charger les fichiers d'incusion du thème
 $theme_includes = array(
