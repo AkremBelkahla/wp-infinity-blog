@@ -71,17 +71,17 @@ function infinity_blog_scripts() {
     // Enqueue Google Fonts
     wp_enqueue_style( 'google-fonts', 'https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;600;700&display=swap', array(), null );
     
-    // Enqueue Tailwind CSS from dist folder
-    wp_enqueue_style( 'tailwind', get_template_directory_uri() . '/dist/css/style.css', array(), INFINITY_BLOG_VERSION );
-    
-    // Theme stylesheet
+    // Theme stylesheet (style.css à la racine du thème)
     wp_enqueue_style( 'infinity-blog-style', get_stylesheet_uri(), array(), INFINITY_BLOG_VERSION );
     
-    // Enqueue Splide JS for sliders
-    wp_enqueue_script( 'splide', get_template_directory_uri() . '/src/js/splide.min.js', array(), '3.6.9', true );
+    // Enqueue custom JS files
+    wp_enqueue_script( 'infinity-blog-custom-comments', get_template_directory_uri() . '/js/custom-comments.js', array( 'jquery' ), INFINITY_BLOG_VERSION, true );
+    wp_enqueue_script( 'infinity-blog-customizer', get_template_directory_uri() . '/js/customizer.js', array( 'jquery' ), INFINITY_BLOG_VERSION, true );
     
-    // Theme's main JS file
-    wp_enqueue_script( 'infinity-blog-script', get_template_directory_uri() . '/dist/js/script.js', array( 'jquery' ), INFINITY_BLOG_VERSION, true );
+    // Suppression des références aux fichiers manquants
+    // wp_enqueue_style( 'tailwind', get_template_directory_uri() . '/dist/css/style.css', array(), INFINITY_BLOG_VERSION );
+    // wp_enqueue_script( 'splide', get_template_directory_uri() . '/src/js/splide.min.js', array(), '3.6.9', true );
+    // wp_enqueue_script( 'infinity-blog-script', get_template_directory_uri() . '/dist/js/script.js', array( 'jquery' ), INFINITY_BLOG_VERSION, true );
 
     if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
         wp_enqueue_script( 'comment-reply' );
@@ -144,26 +144,32 @@ function infinity_blog_widgets_init() {
 }
 add_action( 'widgets_init', 'infinity_blog_widgets_init' );
 
-/**
- * Custom template tags for this theme.
- */
-require get_template_directory() . '/inc/template-tags.php';
+// Charger la classe de menu personnalisée
+require get_template_directory() . '/inc/class-walker-nav-menu.php';
 
-/**
- * Functions which enhance the theme by hooking into WordPress.
- */
-require get_template_directory() . '/inc/template-functions.php';
+// Charger les fichiers d'incusion du thème
+$theme_includes = array(
+    'template-tags.php',    // Balises de modèle personnalisées
+    'template-functions.php', // Fonctions du thème
+    'customizer.php',       // Personnalisateur
+);
 
-/**
- * Customizer additions.
- */
-require get_template_directory() . '/inc/customizer.php';
+foreach ( $theme_includes as $file ) {
+    $filepath = get_template_directory() . '/inc/' . $file;
+    if ( file_exists( $filepath ) ) {
+        require_once $filepath;
+    } else {
+        // Enregistrer une erreur si le fichier est manquant
+        trigger_error( sprintf( 'Erreur de chargement du fichier %s', $filepath ), E_USER_WARNING );
+    }
+}
 
-/**
- * Load Jetpack compatibility file.
- */
+// Charger la compatibilité Jetpack si disponible
 if ( defined( 'JETPACK__VERSION' ) ) {
-    require get_template_directory() . '/inc/jetpack.php';
+    $jetpack_file = get_template_directory() . '/inc/jetpack.php';
+    if ( file_exists( $jetpack_file ) ) {
+        require_once $jetpack_file;
+    }
 }
 
 /**

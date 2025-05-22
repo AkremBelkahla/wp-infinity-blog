@@ -263,3 +263,4 @@ function infinity_blog_get_excerpt( $limit = 20, $post_id = null ) {
     
     return $excerpt;
 }
+}

@@ -102,39 +102,10 @@ if ( ! function_exists( 'infinity_blog_resource_hints' ) ) {
         if ( wp_style_is( 'infinity-blog-fonts', 'queue' ) && 'preconnect' === $relation_type ) {
             $urls[] = array(
                 'href' => 'https://fonts.gstatic.com',
-                'crossorigin',
+                'crossorigin' => '',
             );
         }
         return $urls;
     }
     add_filter( 'wp_resource_hints', 'infinity_blog_resource_hints', 10, 2 );
-}
-
-/**
- * Implement the Custom Header feature.
- */
-require get_template_directory() . '/inc/custom-header.php';
-
-/**
- * Custom template tags for this theme.
- */
-require get_template_directory() . '/inc/template-tags.php';
-
-/**
- * Customizer additions.
- */
-require get_template_directory() . '/inc/customizer.php';
-
-/**
- * Load Jetpack compatibility file.
- */
-if ( defined( 'JETPACK__VERSION' ) ) {
-    require get_template_directory() . '/inc/jetpack.php';
-}
-
-/**
- * Load WooCommerce compatibility file.
- */
-if ( class_exists( 'WooCommerce' ) ) {
-    require get_template_directory() . '/inc/woocommerce.php';
 }
