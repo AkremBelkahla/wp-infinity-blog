@@ -1,0 +1,186 @@
+/* Importer Tailwind CSS */
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+/* Variables personnalisées */
+:root {
+  /* Couleurs principales */
+  --primary-color: #2563eb;
+  --primary-hover: #1d4ed8;
+  --primary-light: #dbeafe;
+  --secondary-color: #1e40af;
+  
+  /* Nuances de texte */
+  --text-color: #1f2937;
+  --text-muted: #6b7280;
+  --text-light: #9ca3af;
+  
+  /* Arrière-plans */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f9fafb;
+  --bg-tertiary: #f3f4f6;
+  
+  /* Bordures */
+  --border-color: #e5e7eb;
+  --border-radius: 0.5rem;
+  
+  /* États */
+  --success: #10b981;
+  --warning: #f59e0b;
+  --error: #ef4444;
+  --info: #3b82f6;
+  
+  /* Ombres */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-md: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  
+  /* Transitions */
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* Espacements */
+  --spacing-1: 0.25rem;
+  --spacing-2: 0.5rem;
+  --spacing-3: 0.75rem;
+  --spacing-4: 1rem;
+  --spacing-5: 1.25rem;
+  --spacing-6: 1.5rem;
+  --spacing-8: 2rem;
+  --spacing-10: 2.5rem;
+  --spacing-12: 3rem;
+}
+
+/* Styles personnalisés pour WordPress */
+@layer components {
+  /* Styles d'alignement WordPress */
+  .alignfull {
+    @apply w-screen relative left-1/2 right-1/2 -mx-[50vw] max-w-[100vw];
+  }
+  
+  .alignwide {
+    @apply max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+  
+  .alignnone {
+    @apply max-w-full mb-6;
+  }
+  
+  .aligncenter {
+    @apply mx-auto mb-6 block;
+  }
+  
+  .alignleft {
+    @apply float-left mr-6 mb-4;
+  }
+  
+  .alignright {
+    @apply float-right ml-6 mb-4;
+  }
+  
+  /* Styles de blocs WordPress */
+  .wp-block-button__link {
+    @apply inline-flex items-center justify-center px-6 py-2.5 font-medium rounded-md transition-colors;
+  }
+  
+  .is-style-fill .wp-block-button__link {
+    @apply bg-primary text-white hover:bg-primary-hover;
+  }
+  
+  .is-style-outline .wp-block-button__link {
+    @apply border border-primary text-primary hover:bg-primary hover:text-white;
+  }
+  
+  /* Styles de navigation */
+  .site-header {
+    @apply bg-bg-primary shadow-sm py-4 sticky top-0 z-50 transition-all border-b border-border;
+  }
+  
+  .site-header.scrolled {
+    @apply py-2 bg-opacity-98 backdrop-blur;
+  }
+  
+  .main-navigation {
+    @apply flex justify-between items-center flex-wrap gap-6 px-4 max-w-7xl mx-auto w-full relative;
+  }
+  
+  .primary-menu {
+    @apply flex list-none gap-6 m-0 p-0;
+  }
+  
+  .primary-menu li {
+    @apply relative;
+  }
+  
+  .primary-menu a {
+    @apply text-text font-medium py-2 block relative;
+  }
+  
+  .primary-menu a::after {
+    @apply content-[''] absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition;
+  }
+  
+  .primary-menu a:hover::after,
+  .primary-menu .current-menu-item > a::after {
+    @apply w-full;
+  }
+  
+  /* Styles de pied de page */
+  .site-footer {
+    @apply bg-bg-tertiary text-text-muted py-12 pt-12 pb-6 mt-12 text-sm leading-relaxed;
+  }
+  
+  .footer-widgets {
+    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-8;
+  }
+  
+  .site-info {
+    @apply text-center pt-6 border-t border-border text-sm;
+  }
+}
+
+/* Styles spécifiques pour l'éditeur FSE */
+body.is-template-editor {
+  @apply p-0 m-0;
+}
+
+.editor-styles-wrapper {
+  @apply font-sans text-text;
+}
+
+/* Styles pour les blocs FSE */
+.wp-block-post-title {
+  @apply text-4xl font-bold mb-4 leading-tight;
+}
+
+.wp-block-post-content {
+  @apply leading-relaxed;
+}
+
+.wp-block-post-featured-image img {
+  @apply w-full h-auto rounded-lg mb-6;
+}
+
+.wp-block-post-excerpt__excerpt {
+  @apply text-text-muted mb-4;
+}
+
+.wp-block-post-date {
+  @apply text-text-light text-sm mb-4;
+}
+
+/* Styles pour les modèles FSE */
+.wp-site-blocks {
+  @apply min-h-screen flex flex-col;
+}
+
+.wp-block-template-part--header {
+  @apply sticky top-0 z-50 bg-white shadow-sm;
+}
+
+.wp-block-template-part--footer {
+  @apply mt-auto;
+}

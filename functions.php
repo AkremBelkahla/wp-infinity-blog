@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Define theme constants
-define( 'INFINITY_BLOG_VERSION', '1.0.0' );
+define( 'INFINITY_BLOG_VERSION', '1.2.0' );
 define( 'INFINITY_BLOG_THEME_DIR', get_template_directory() );
 define( 'INFINITY_BLOG_THEME_URI', get_template_directory_uri() );
 
@@ -51,16 +51,30 @@ function infinity_blog_setup() {
             'flex-height' => true,
         )
     );
+    
+    // Support complet pour l'édition de site (FSE)
+    add_theme_support( 'block-templates' );
+    add_theme_support( 'block-template-parts' );
 
     // Add support for editor styles
     add_theme_support( 'editor-styles' );
-    add_editor_style( 'dist/css/editor-style.css' );
+    add_editor_style( 'css/app.css' );
 
     // Add support for responsive embedded content
     add_theme_support( 'responsive-embeds' );
 
     // Add support for full and wide align images
     add_theme_support( 'align-wide' );
+    
+    // Add support for block styles
+    add_theme_support( 'wp-block-styles' );
+    
+    // Désactiver les styles de blocs par défaut de WordPress pour utiliser TailwindCSS
+    add_filter( 'should_load_separate_core_block_assets', '__return_false' );
+    
+    // Désactiver les styles de blocs par défaut de WordPress pour utiliser TailwindCSS
+    remove_filter( 'render_block', 'wp_render_layout_support_flag' );
+    remove_filter( 'render_block', 'gutenberg_render_layout_support_flag' );
 }
 add_action( 'after_setup_theme', 'infinity_blog_setup' );
 
@@ -69,14 +83,17 @@ add_action( 'after_setup_theme', 'infinity_blog_setup' );
  */
 function infinity_blog_scripts() {
     // Enqueue Google Fonts
-    wp_enqueue_style( 'google-fonts', 'https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;600;700&display=swap', array(), null );
+    wp_enqueue_style( 'google-fonts', 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap', array(), null );
     
-    // Theme stylesheet (style.css à la racine du thème)
-    wp_enqueue_style( 'infinity-blog-style', get_stylesheet_uri(), array(), INFINITY_BLOG_VERSION );
+    // Enqueue TailwindCSS styles
+    wp_enqueue_style( 'infinity-blog-tailwind', get_template_directory_uri() . '/css/app.css', array(), INFINITY_BLOG_VERSION );
     
-    // Enqueue custom JS files with proper dependencies
-    wp_enqueue_script( 'infinity-blog-custom-comments', 
-        get_template_directory_uri() . '/js/custom-comments.js', 
+    // Theme stylesheet (style.css à la racine du thème pour les styles spécifiques)
+    wp_enqueue_style( 'infinity-blog-style', get_stylesheet_uri(), array('infinity-blog-tailwind'), INFINITY_BLOG_VERSION );
+    
+    // Enqueue main JS file
+    wp_enqueue_script( 'infinity-blog-app', 
+        get_template_directory_uri() . '/js/app.js', 
         array( 'jquery' ), 
         INFINITY_BLOG_VERSION, 
         true 
@@ -96,47 +113,18 @@ function infinity_blog_scripts() {
         )
     );
     
-    wp_localize_script( 'infinity-blog-custom-comments', 'infinity_blog_comments', $comments_data );
-    
-    // Enqueue mobile menu script
-    wp_enqueue_script(
-        'infinity-blog-mobile-menu',
-        get_template_directory_uri() . '/js/mobile-menu.js',
-        array('jquery'),
-        INFINITY_BLOG_VERSION,
-        true
-    );
+    wp_localize_script( 'infinity-blog-app', 'infinity_blog_comments', $comments_data );
     
     // Localize script with translated strings
     $mobile_menu_data = array(
         'toggle_submenu' => __( 'Toggle submenu', 'infinity-blog' ),
     );
     
-    wp_localize_script( 'infinity-blog-mobile-menu', 'infinity_blog_vars', $mobile_menu_data );
-    
-    // Enqueue navigation script
-    wp_enqueue_script(
-        'infinity-blog-navigation',
-        get_template_directory_uri() . '/js/navigation.js',
-        array('jquery'),
-        INFINITY_BLOG_VERSION,
-        true
-    );
+    wp_localize_script( 'infinity-blog-app', 'infinity_blog_vars', $mobile_menu_data );
     
     // Add dashicons for frontend
     wp_enqueue_style( 'dashicons' );
     
-    // Load customizer script only in customizer preview
-    if ( is_customize_preview() ) {
-        wp_enqueue_script( 
-            'infinity-blog-customizer', 
-            get_template_directory_uri() . '/js/customizer.js', 
-            array( 'jquery', 'customize-preview', 'customize-selective-refresh' ), 
-            INFINITY_BLOG_VERSION, 
-            true 
-        );
-    }
-
     if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
         wp_enqueue_script( 'comment-reply' );
     }
@@ -256,6 +244,11 @@ if ( defined( 'JETPACK__VERSION' ) ) {
 }
 
 /**
+ * Load security functions.
+ */
+require get_template_directory() . '/inc/security.php';
+
+/**
  * Add theme support for infinite scroll.
  */
 function infinity_blog_infinite_scroll_init() {
@@ -279,3 +272,88 @@ function infinity_blog_infinite_scroll_render() {
         get_template_part( 'template-parts/content', get_post_type() );
     }
 }
+
+/**
+ * Optimisation des performances
+ */
+
+// Ajouter le préchargement DNS pour les ressources externes
+function infinity_blog_resource_hints( $urls, $relation_type ) {
+    if ( 'dns-prefetch' === $relation_type ) {
+        // Ajouter les domaines pour le préchargement DNS
+        $urls[] = '//fonts.googleapis.com';
+        $urls[] = '//fonts.gstatic.com';
+        $urls[] = '//ajax.googleapis.com';
+    }
+    return $urls;
+}
+add_filter( 'wp_resource_hints', 'infinity_blog_resource_hints', 10, 2 );
+
+// Désactiver les emojis WordPress pour réduire les requêtes HTTP
+function infinity_blog_disable_emojis() {
+    remove_action( 'wp_head', 'print_emoji_detection_script', 7 );
+    remove_action( 'admin_print_scripts', 'print_emoji_detection_script' );
+    remove_action( 'wp_print_styles', 'print_emoji_styles' );
+    remove_action( 'admin_print_styles', 'print_emoji_styles' );
+    remove_filter( 'the_content_feed', 'wp_staticize_emoji' );
+    remove_filter( 'comment_text_rss', 'wp_staticize_emoji' );
+    remove_filter( 'wp_mail', 'wp_staticize_emoji_for_email' );
+    add_filter( 'tiny_mce_plugins', 'infinity_blog_disable_emojis_tinymce' );
+    add_filter( 'wp_resource_hints', 'infinity_blog_disable_emojis_remove_dns_prefetch', 10, 2 );
+}
+add_action( 'init', 'infinity_blog_disable_emojis' );
+
+// Désactiver les emojis dans TinyMCE
+function infinity_blog_disable_emojis_tinymce( $plugins ) {
+    if ( is_array( $plugins ) ) {
+        return array_diff( $plugins, array( 'wpemoji' ) );
+    } else {
+        return array();
+    }
+}
+
+// Supprimer le préchargement DNS pour les emojis
+function infinity_blog_disable_emojis_remove_dns_prefetch( $urls, $relation_type ) {
+    if ( 'dns-prefetch' === $relation_type ) {
+        $emoji_svg_url = apply_filters( 'emoji_svg_url', 'https://s.w.org/images/core/emoji/13.0.0/svg/' );
+        $urls = array_diff( $urls, array( $emoji_svg_url ) );
+    }
+    return $urls;
+}
+
+// Optimiser le chargement des scripts
+function infinity_blog_defer_scripts( $tag, $handle, $src ) {
+    // Liste des scripts à différer
+    $defer_scripts = array( 
+        'infinity-blog-mobile-menu',
+        'infinity-blog-navigation'
+    );
+
+    // Ajouter l'attribut defer aux scripts spécifiés
+    if ( in_array( $handle, $defer_scripts ) ) {
+        return str_replace( ' src', ' defer src', $tag );
+    }
+    
+    return $tag;
+}
+add_filter( 'script_loader_tag', 'infinity_blog_defer_scripts', 10, 3 );
+
+// Ajouter le support pour le chargement paresseux des images
+function infinity_blog_add_image_loading_lazy( $content ) {
+    if ( is_admin() || empty( $content ) ) {
+        return $content;
+    }
+    
+    // Ne pas appliquer aux flux RSS ou aux extraits
+    if ( is_feed() || is_excerpt() ) {
+        return $content;
+    }
+    
+    // Remplacer les attributs src par loading="lazy"
+    $content = preg_replace( '/(<img[^>]*?)\s?\/?>/i', '$1 loading="lazy" />', $content );
+    
+    return $content;
+}
+add_filter( 'the_content', 'infinity_blog_add_image_loading_lazy', 99 );
+add_filter( 'post_thumbnail_html', 'infinity_blog_add_image_loading_lazy', 99 );
+add_filter( 'get_avatar', 'infinity_blog_add_image_loading_lazy', 99 );

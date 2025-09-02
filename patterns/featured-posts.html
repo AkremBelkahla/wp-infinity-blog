@@ -1,0 +1,51 @@
+<?php
+/**
+ * Title: Articles en vedette
+ * Slug: infinity-blog/featured-posts
+ * Categories: query
+ * Keywords: posts, articles, featured, grid
+ */
+?>
+
+<!-- wp:group {"className":"featured-posts py-12","layout":{"type":"constrained","contentSize":"1200px"}} -->
+<div class="wp-block-group featured-posts py-12">
+    <!-- wp:heading {"textAlign":"center","className":"mb-8"} -->
+    <h2 class="wp-block-heading has-text-align-center mb-8">Articles en vedette</h2>
+    <!-- /wp:heading -->
+    
+    <!-- wp:query {"queryId":3,"query":{"perPage":"3","pages":0,"offset":0,"postType":"post","order":"desc","orderBy":"date","author":"","search":"","exclude":[],"sticky":"only","inherit":false},"displayLayout":{"type":"flex","columns":3},"className":"featured-posts-grid"} -->
+    <div class="wp-block-query featured-posts-grid">
+        <!-- wp:post-template -->
+            <!-- wp:group {"className":"post-card bg-bg-secondary rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow h-full flex flex-col","layout":{"type":"constrained"}} -->
+            <div class="wp-block-group post-card bg-bg-secondary rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow h-full flex flex-col">
+                <!-- wp:post-featured-image {"isLink":true,"height":"200px"} /-->
+                
+                <!-- wp:group {"className":"p-6 flex-grow","layout":{"type":"constrained"}} -->
+                <div class="wp-block-group p-6 flex-grow">
+                    <!-- wp:post-title {"isLink":true,"className":"mb-2 text-xl font-bold"} /-->
+                    
+                    <!-- wp:group {"className":"post-meta flex items-center text-sm text-text-muted mb-3","layout":{"type":"flex","flexWrap":"nowrap"}} -->
+                    <div class="wp-block-group post-meta flex items-center text-sm text-text-muted mb-3">
+                        <!-- wp:post-date {"className":"mr-4"} /-->
+                        <!-- wp:post-terms {"term":"category"} /-->
+                    </div>
+                    <!-- /wp:group -->
+                    
+                    <!-- wp:post-excerpt {"moreText":"Lire la suite →","className":"mb-4"} /-->
+                </div>
+                <!-- /wp:group -->
+            </div>
+            <!-- /wp:group -->
+        <!-- /wp:post-template -->
+    </div>
+    <!-- /wp:query -->
+    
+    <!-- wp:buttons {"layout":{"type":"flex","justifyContent":"center"},"className":"mt-8"} -->
+    <div class="wp-block-buttons mt-8">
+        <!-- wp:button -->
+        <div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="/blog">Voir tous les articles</a></div>
+        <!-- /wp:button -->
+    </div>
+    <!-- /wp:buttons -->
+</div>
+<!-- /wp:group -->

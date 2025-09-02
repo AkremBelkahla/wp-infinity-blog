@@ -3,15 +3,22 @@ Theme Name: Infinity Blog
 Theme URI: https://infinityweb.tn
 Author: Akrem Belkahla
 Author URI: https://infinityweb.tn
-Description: A clean, minimal and fast WordPress theme focused on readability and typography.
-Version: 1.0
+Description: A clean, minimal and fast WordPress theme focused on readability and typography. Compatible with Full Site Editing and TailwindCSS.
+Version: 1.2.0
 License: GNU General Public License v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: infinity-blog
-Tags: blog, news, grid-layout, right-sidebar, custom-background, custom-colors, custom-logo, custom-menu, featured-images, threaded-comments, translation-ready
+Tags: blog, news, grid-layout, right-sidebar, custom-background, custom-colors, custom-logo, custom-menu, featured-images, threaded-comments, translation-ready, block-styles, wide-blocks, editor-style, full-site-editing, template-editing
+Requires at least: 5.9
+Requires PHP: 7.4
 */
 
-/* Base Styles */
+/*
+ * Ce fichier contient uniquement les styles spécifiques au thème qui ne peuvent pas être gérés par TailwindCSS
+ * La plupart des styles sont maintenant gérés par TailwindCSS dans src/css/app.css
+ */
+
+/* Styles de compatibilité pour les anciens navigateurs */
 :root {
     /* Couleurs principales */
     --primary-color: #2563eb;
@@ -32,34 +39,6 @@ Tags: blog, news, grid-layout, right-sidebar, custom-background, custom-colors, 
     /* Bordures */
     --border-color: #e5e7eb;
     --border-radius: 0.5rem;
-    
-    /* États */
-    --success: #10b981;
-    --warning: #f59e0b;
-    --error: #ef4444;
-    --info: #3b82f6;
-    
-    /* Ombres */
-    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-    --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-    --shadow-md: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-    --shadow-lg: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
-    
-    /* Transitions */
-    --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
-    --transition: 250ms cubic-bezier(0.4, 0, 0.2, 1);
-    --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
-    
-    /* Espacements */
-    --spacing-1: 0.25rem;
-    --spacing-2: 0.5rem;
-    --spacing-3: 0.75rem;
-    --spacing-4: 1rem;
-    --spacing-5: 1.25rem;
-    --spacing-6: 1.5rem;
-    --spacing-8: 2rem;
-    --spacing-10: 2.5rem;
-    --spacing-12: 3rem;
 }
 
 /* Reset */
@@ -261,7 +240,7 @@ img {
         position: fixed;
         top: 0;
         right: -100%;
-        width: 320px;
+        width: min(320px, 80vw);
         height: 100vh;
         background-color: var(--bg-primary);
         box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
@@ -271,10 +250,19 @@ img {
         z-index: 1000;
         flex-direction: column;
         align-items: flex-start;
+        -webkit-overflow-scrolling: touch; /* Pour une meilleure expérience de défilement sur iOS */
     }
     
     .primary-navigation.active {
         transform: translateX(-100%);
+    }
+    
+    /* Empêcher le défilement du body quand le menu est ouvert */
+    body.menu-open {
+        overflow: hidden;
+        position: fixed;
+        width: 100%;
+        height: 100%;
     }
     
     .primary-menu {
@@ -296,6 +284,9 @@ img {
     .primary-menu a {
         padding: 1rem 0;
         width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
     }
     
     .primary-menu .sub-menu {
@@ -309,6 +300,14 @@ img {
         opacity: 1;
         visibility: visible;
         transform: none;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease-in-out;
+    }
+    
+    .primary-menu .sub-menu.active {
+        display: block;
+        max-height: 1000px;
     }
     
     .primary-menu .sub-menu .sub-menu {
@@ -325,6 +324,20 @@ img {
     
     .submenu-toggle {
         display: flex;
+        width: 30px;
+        height: 30px;
+        align-items: center;
+        justify-content: center;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        padding: 0;
+        color: var(--text-color);
+        transition: transform 0.3s ease;
+    }
+    
+    .submenu-toggle.active {
+        transform: rotate(180deg);
     }
     
     /* Overlay */
