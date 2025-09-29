@@ -1,5 +1,7 @@
 # Thème WordPress Infinity Blog v1.2.0
 
+> **AVERTISSEMENT** : Ce thème est actuellement en cours de développement et n'est pas encore prêt pour une utilisation en production. Certaines fonctionnalités peuvent être incomplètes ou instables.
+
 Un thème WordPress moderne et réactif conçu pour les blogs et les sites d'actualités avec un système de commentaires avancé, une compatibilité complète avec l'Édition Complète de Site (FSE), intégration de TailwindCSS et des optimisations de performance.
 
 ## Fonctionnalités principales
@@ -82,6 +84,23 @@ npm run build
 - PHP 7.4 ou version ultérieure
 - MySQL 5.6 ou version ultérieure
 - Node.js 14+ (pour le développement uniquement)
+
+## État du développement
+
+Ce thème est actuellement en phase de développement actif. Voici l'état des différentes fonctionnalités :
+
+| Fonctionnalité | État |
+|----------------|-------|
+| Structure de base du thème | Terminé |
+| Intégration TailwindCSS | Terminé |
+| Modèles FSE | En cours |
+| Parts de thème | En cours |
+| Patterns réutilisables | En cours |
+| Système de build | Terminé |
+| Système de commentaires avancé | En cours |
+| Documentation | En cours |
+
+Nous travaillons activement à finaliser toutes les fonctionnalités et à améliorer la stabilité du thème. Votre retour d'expérience est le bienvenu !
 
 ## Personnalisation
 
