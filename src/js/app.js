@@ -2,62 +2,11 @@
  * Fichier JavaScript principal
  */
 
-// Gestion du menu mobile
+// Importer les modules
+import './mobile-menu';
+
+// Gestion du header sticky
 document.addEventListener('DOMContentLoaded', function() {
-  // Sélectionner les éléments du menu
-  const menuToggle = document.querySelector('.menu-toggle');
-  const primaryNav = document.querySelector('.primary-navigation');
-  const menuOverlay = document.querySelector('.menu-overlay');
-  
-  if (menuToggle) {
-    menuToggle.addEventListener('click', function() {
-      // Toggle la classe active sur le bouton
-      this.classList.toggle('active');
-      
-      // Toggle la classe active sur la navigation
-      if (primaryNav) {
-        primaryNav.classList.toggle('active');
-      }
-      
-      // Toggle la classe menu-open sur le body
-      document.body.classList.toggle('menu-open');
-      
-      // Toggle l'attribut aria-expanded
-      const expanded = this.getAttribute('aria-expanded') === 'true' || false;
-      this.setAttribute('aria-expanded', !expanded);
-      
-      // Toggle la visibilité de l'overlay
-      if (menuOverlay) {
-        menuOverlay.style.opacity = expanded ? '0' : '1';
-        menuOverlay.style.visibility = expanded ? 'hidden' : 'visible';
-      }
-    });
-  }
-  
-  // Gestion des sous-menus sur mobile
-  const submenuToggles = document.querySelectorAll('.submenu-toggle');
-  
-  submenuToggles.forEach(toggle => {
-    toggle.addEventListener('click', function(e) {
-      e.preventDefault();
-      
-      // Toggle la classe active sur le bouton
-      this.classList.toggle('active');
-      
-      // Trouver le sous-menu associé
-      const submenu = this.nextElementSibling || this.parentNode.querySelector('.sub-menu');
-      
-      if (submenu) {
-        submenu.classList.toggle('active');
-        
-        // Toggle l'attribut aria-expanded
-        const expanded = this.getAttribute('aria-expanded') === 'true' || false;
-        this.setAttribute('aria-expanded', !expanded);
-      }
-    });
-  });
-  
-  // Gestion du header sticky
   const header = document.querySelector('.site-header');
   
   if (header) {
@@ -67,27 +16,6 @@ document.addEventListener('DOMContentLoaded', function() {
       } else {
         header.classList.remove('scrolled');
       }
-    });
-  }
-  
-  // Bouton retour en haut
-  const backToTopButton = document.querySelector('.back-to-top');
-  
-  if (backToTopButton) {
-    window.addEventListener('scroll', function() {
-      if (window.scrollY > 300) {
-        backToTopButton.classList.add('visible');
-      } else {
-        backToTopButton.classList.remove('visible');
-      }
-    });
-    
-    backToTopButton.addEventListener('click', function(e) {
-      e.preventDefault();
-      window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-      });
     });
   }
 });
@@ -115,6 +43,23 @@ if (window.wp && window.wp.blocks) {
     wp.blocks.registerBlockStyle('core/image', {
       name: 'rounded',
       label: 'Rounded'
+    });
+    
+    // Styles pour les sections
+    wp.blocks.registerBlockStyle('core/cover', {
+      name: 'overlay-primary',
+      label: 'Overlay Primary'
+    });
+    
+    wp.blocks.registerBlockStyle('core/columns', {
+      name: 'boxed',
+      label: 'Boxed'
+    });
+    
+    // Styles pour les paragraphes
+    wp.blocks.registerBlockStyle('core/paragraph', {
+      name: 'lead',
+      label: 'Lead'
     });
   });
 }

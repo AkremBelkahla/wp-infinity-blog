@@ -1,0 +1,2 @@
+Ce dossier contient les images source du thème.
+Les images seront copiées dans le dossier /images/ lors de la compilation.

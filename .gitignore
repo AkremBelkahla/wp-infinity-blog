@@ -1,1 +1,34 @@
-html
+# Dépendances
+node_modules/
+
+# Fichiers générés
+/css/
+/js/
+/dist/
+
+# Fichiers de build
+/mix-manifest.json
+
+# Fichiers d'environnement
+.env
+
+# Fichiers système
+.DS_Store
+Thumbs.db
+
+# Fichiers d'éditeur
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# Fichiers de log
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Fichiers de sauvegarde
+*.bak
+*.backup
+*~

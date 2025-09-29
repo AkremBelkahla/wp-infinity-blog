@@ -1,0 +1,12 @@
+# Navigateurs supportés
+# Pour plus d'informations : https://github.com/browserslist/browserslist
+
+# Support des navigateurs modernes et des deux dernières versions
+last 2 versions
+not dead
+> 0.5%
+Firefox ESR
+
+# Exclure les anciens navigateurs
+not IE 11
+not op_mini all

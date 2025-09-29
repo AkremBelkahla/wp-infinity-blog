@@ -1,0 +1,90 @@
+/**
+ * Styles spécifiques à l'éditeur FSE
+ */
+
+/* Importer les styles principaux */
+@import 'app.css';
+
+/* Styles spécifiques à l'éditeur */
+.editor-styles-wrapper {
+    @apply font-sans text-text;
+}
+
+/* Améliorer la visibilité des blocs dans l'éditeur */
+.is-root-container > .wp-block {
+    @apply relative;
+}
+
+.is-root-container > .wp-block:hover::before {
+    content: '';
+    @apply absolute inset-0 border-2 border-primary border-dashed pointer-events-none z-10;
+}
+
+/* Styles pour les boutons d'action de l'éditeur */
+.block-editor-block-contextual-toolbar {
+    @apply z-20;
+}
+
+/* Styles pour les contrôles de l'éditeur */
+.components-panel__body-toggle.components-button {
+    @apply text-text font-medium;
+}
+
+/* Styles pour les contrôles de couleur */
+.components-circular-option-picker__option {
+    @apply border border-gray-300;
+}
+
+/* Styles pour les contrôles de taille de police */
+.components-font-size-picker__controls {
+    @apply flex items-center;
+}
+
+/* Styles pour les patterns */
+.block-editor-block-patterns-list__list-item {
+    @apply transition-transform hover:scale-105;
+}
+
+/* Styles pour les parts de thème */
+.wp-block-template-part {
+    @apply relative border border-dashed border-gray-300 p-4;
+}
+
+.wp-block-template-part::before {
+    content: attr(area);
+    @apply absolute top-0 right-0 bg-gray-100 text-xs px-2 py-1 text-gray-600 rounded-bl;
+}
+
+/* Styles pour les colonnes */
+.wp-block-columns {
+    @apply gap-4;
+}
+
+/* Styles pour les groupes */
+.wp-block-group.is-style-card {
+    @apply bg-bg-secondary rounded-lg shadow-sm p-6;
+}
+
+/* Styles pour les boutons */
+.wp-block-button.is-style-fill .wp-block-button__link {
+    @apply bg-primary text-white hover:bg-primary-hover;
+}
+
+.wp-block-button.is-style-outline .wp-block-button__link {
+    @apply border border-primary text-primary hover:bg-primary hover:text-white;
+}
+
+/* Styles pour les images */
+.wp-block-image.is-style-rounded img {
+    @apply rounded-lg overflow-hidden;
+}
+
+/* Styles pour les paragraphes */
+.wp-block-paragraph.is-style-lead {
+    @apply text-lg font-medium text-text-muted;
+}
+
+/* Styles pour les couvertures */
+.wp-block-cover.is-style-overlay-primary::before {
+    @apply bg-primary opacity-70;
+}
