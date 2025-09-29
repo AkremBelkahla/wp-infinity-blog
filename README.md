@@ -1,12 +1,6 @@
-<<<<<<< HEAD
 # Thème WordPress Infinity Blog v1.2.0
 
 Un thème WordPress moderne et réactif conçu pour les blogs et les sites d'actualités avec un système de commentaires avancé, une compatibilité complète avec l'Édition Complète de Site (FSE), intégration de TailwindCSS et des optimisations de performance.
-=======
-# Thème WordPress Infinity Blog v1.1.0
-
-Un thème WordPress moderne et réactif conçu pour les blogs et les sites d'actualités avec un système de commentaires avancé, une compatibilité Gutenberg améliorée et des optimisations de performance.
->>>>>>> 5aeb2ea (Mise à jour du thème Infinity Blog vers la version 1.1.0)
 
 ## Fonctionnalités principales
 
@@ -31,30 +25,18 @@ Un thème WordPress moderne et réactif conçu pour les blogs et les sites d'act
 - **Validation en temps réel** des champs du formulaire
 - **Prévisualisation** des commentaires avant envoi
 
-<<<<<<< HEAD
 ### 🌈 Personnalisation
 - **Édition visuelle complète** via l'éditeur de site WordPress
 - **Modèles de page flexibles** avec ou sans barre latérale
 - **Support complet de l'éditeur Gutenberg**
   - Styles de blocs natifs optimisés avec TailwindCSS
   - Palette de couleurs personnalisée via theme.json
-=======
-### 🎨 Personnalisation
-- Interface personnalisable via le WordPress Customizer
-- Support des mises en page flexibles
-- **Support complet de l'éditeur Gutenberg**
-  - Styles de blocs natifs
-  - Palette de couleurs personnalisée
->>>>>>> 5aeb2ea (Mise à jour du thème Infinity Blog vers la version 1.1.0)
   - Tailles de police personnalisées
   - Support des alignements larges et pleine largeur
 - Design responsive amélioré pour tous les appareils
   - Menu mobile optimisé avec animations
   - Gestion des sous-menus tactiles
-<<<<<<< HEAD
-=======
   - Interface adaptative sur tous les écrans
->>>>>>> 5aeb2ea (Mise à jour du thème Infinity Blog vers la version 1.1.0)
 
 ### 🔒 Sécurité
 - Protection contre les soumissions multiples
@@ -73,7 +55,6 @@ Un thème WordPress moderne et réactif conçu pour les blogs et les sites d'act
 2. Placez-le dans le répertoire `/wp-content/themes/`
 3. Activez le thème via le menu 'Apparence > Thèmes' dans WordPress
 
-<<<<<<< HEAD
 ### Installation des dépendances de développement
 
 Pour travailler sur le thème et compiler les assets :
@@ -88,9 +69,6 @@ npm run watch
 # Compilation pour la production
 npm run build
 ```
-
-=======
->>>>>>> 5aeb2ea (Mise à jour du thème Infinity Blog vers la version 1.1.0)
 ### ⚡ Performance
 - Chargement différé des images (lazy loading)
 - Préchargement DNS pour les ressources externes
@@ -144,7 +122,6 @@ add_filter('infinity_blog_defer_scripts', function($scripts) {
     return $scripts;
 });
 
-<<<<<<< HEAD
 // Ajouter des patterns personnalisés
 add_action('init', function() {
     register_block_pattern(
@@ -156,24 +133,15 @@ add_action('init', function() {
             'categories'  => array('featured')
         )
     );
-=======
+
 // Modifier la palette de couleurs de l'éditeur
 add_filter('infinity_blog_editor_color_palette', function($colors) {
     $colors[] = array(
-        'name'  => 'Ma couleur',
         'slug'  => 'ma-couleur',
         'color' => '#ff6b6b',
     );
     return $colors;
->>>>>>> 5aeb2ea (Mise à jour du thème Infinity Blog vers la version 1.1.0)
 });
-```
-
-## Support
-
-Pour le support technique, veuillez ouvrir une issue sur le dépôt GitHub ou contactez-nous via notre site web.
-
-## Licence
 
 Ce thème est sous licence GPL v2 ou ultérieure.
 
@@ -189,7 +157,6 @@ Ce thème est sous licence GPL v2 ou ultérieure.
 
 ## Changelog
 
-<<<<<<< HEAD
 ### Version 1.2.0
 - Ajout du support complet pour l'Édition Complète de Site (FSE)
 - Intégration de TailwindCSS pour les styles
@@ -198,8 +165,6 @@ Ce thème est sous licence GPL v2 ou ultérieure.
 - Refonte du système de styles avec theme.json
 - Optimisation des performances avec compilation des assets
 
-=======
->>>>>>> 5aeb2ea (Mise à jour du thème Infinity Blog vers la version 1.1.0)
 ### Version 1.1.0
 - Ajout du support complet pour les blocs WordPress (Gutenberg)
 - Amélioration de la compatibilité mobile et de l'expérience utilisateur
@@ -212,8 +177,4 @@ Ce thème est sous licence GPL v2 ou ultérieure.
 
 ---
 
-<<<<<<< HEAD
 *Dernière mise à jour : 29 septembre 2025*
-=======
-*Dernière mise à jour : 25 mai 2024*
->>>>>>> 5aeb2ea (Mise à jour du thème Infinity Blog vers la version 1.1.0)
