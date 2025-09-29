@@ -6,6 +6,11 @@ mix.js('src/js/app.js', 'js')
       require('tailwindcss'),
       require('autoprefixer'),
    ])
+   .postCss('src/css/editor.css', 'css', [
+      require('postcss-import'),
+      require('tailwindcss'),
+      require('autoprefixer'),
+   ])
    .options({
       processCssUrls: false
    })
