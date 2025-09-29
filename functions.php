@@ -220,9 +220,10 @@ add_filter('nav_menu_link_attributes', 'infinity_blog_nav_menu_link_attributes',
 
 // Charger les fichiers d'incusion du thème
 $theme_includes = array(
-    'template-tags.php',    // Balises de modèle personnalisées
+    'template-tags.php',      // Balises de modèle personnalisées
     'template-functions.php', // Fonctions du thème
-    'customizer.php',       // Personnalisateur
+    'customizer.php',         // Personnalisateur
+    'template-registration.php', // Enregistrement des modèles FSE
 );
 
 foreach ( $theme_includes as $file ) {
