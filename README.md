@@ -27,20 +27,20 @@ Un thème WordPress moderne et réactif conçu pour les blogs et les sites d'act
 - **Validation en temps réel** des champs du formulaire
 - **Prévisualisation** des commentaires avant envoi
 
-### 🌈 Personnalisation
+1. Forker le dépôt
+2. Créer une branche pour votre fonctionnalité (`git checkout -b feature/amazing-feature`)
+3. Commiter vos changements (`git commit -m 'Add some amazing feature'`)
+4. Pousser vers la branche (`git push origin feature/amazing-feature`)
+5. Ouvrir une Pull Request
+
+## Support
+
 - **Édition visuelle complète** via l'éditeur de site WordPress
 - **Modèles de page flexibles** avec ou sans barre latérale
 - **Support complet de l'éditeur Gutenberg**
   - Styles de blocs natifs optimisés avec TailwindCSS
   - Palette de couleurs personnalisée via theme.json
   - Tailles de police personnalisées
-  - Support des alignements larges et pleine largeur
-- Design responsive amélioré pour tous les appareils
-  - Menu mobile optimisé avec animations
-  - Gestion des sous-menus tactiles
-  - Interface adaptative sur tous les écrans
-
-### 🔒 Sécurité
 - Protection contre les soumissions multiples
 - Vérification des nonces pour toutes les actions AJAX
 - Validation côté client et serveur
