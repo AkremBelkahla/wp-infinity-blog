@@ -75,19 +75,44 @@ add_action( 'after_setup_theme', 'infinity_blog_setup' );
  * Enqueue scripts and styles.
  */
 function infinity_blog_scripts() {
-    // Enqueue Google Fonts
-    wp_enqueue_style( 'google-fonts', 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap', array(), null );
+    // Enqueue Google Fonts - Montserrat
+    wp_enqueue_style( 'google-fonts-montserrat', 'https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap', array(), null );
+    
+    // Enqueue Font Awesome pour les icônes
+    wp_enqueue_style( 'font-awesome', 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/all.min.css', array(), '5.15.0' );
+    
+    // Enqueue Bootstrap CSS
+    wp_enqueue_style( 'bootstrap', 'https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css', array(), '4.6.0' );
     
     // Enqueue TailwindCSS styles
     wp_enqueue_style( 'infinity-blog-tailwind', get_template_directory_uri() . '/css/app.css', array(), INFINITY_BLOG_VERSION );
     
+    // Enqueue Infinity Blog theme styles
+    wp_enqueue_style( 'infinity-blog-theme', get_template_directory_uri() . '/assets/css/infinity-theme.css', array('bootstrap'), INFINITY_BLOG_VERSION );
+    
     // Theme stylesheet (style.css à la racine du thème pour les styles spécifiques)
-    wp_enqueue_style( 'infinity-blog-style', get_stylesheet_uri(), array('infinity-blog-tailwind'), INFINITY_BLOG_VERSION );
+    wp_enqueue_style( 'infinity-blog-style', get_stylesheet_uri(), array('infinity-blog-theme'), INFINITY_BLOG_VERSION );
+    
+    // Enqueue Bootstrap JS Bundle (includes Popper)
+    wp_enqueue_script( 'bootstrap-bundle', 
+        'https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js', 
+        array( 'jquery' ), 
+        '4.6.0', 
+        true 
+    );
+    
+    // Enqueue Infinity Blog theme JS
+    wp_enqueue_script( 'infinity-blog-theme-js', 
+        get_template_directory_uri() . '/assets/js/infinity-theme.js', 
+        array( 'jquery', 'bootstrap-bundle' ), 
+        INFINITY_BLOG_VERSION, 
+        true 
+    );
     
     // Enqueue main JS file
     wp_enqueue_script( 'infinity-blog-app', 
         get_template_directory_uri() . '/js/app.js', 
-        array( 'jquery' ), 
+        array( 'jquery', 'bootstrap-bundle', 'infinity-blog-theme-js' ), 
         INFINITY_BLOG_VERSION, 
         true 
     );

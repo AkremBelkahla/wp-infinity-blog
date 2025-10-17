@@ -1,0 +1,409 @@
+/**
+ * Infinity Blog Theme Styles
+ * Modern magazine-style WordPress theme
+ */
+
+/* Variables CSS */
+:root {
+    --infinity-primary: #FFCC00;
+    --infinity-primary-hover: #b38f00;
+    --infinity-secondary: #31404B;
+    --infinity-dark: #1E2024;
+    --infinity-light: #FFFFFF;
+    --infinity-text: #9A9DA2;
+    --infinity-bg: #EDEFF4;
+}
+
+/* Typography - Montserrat Font */
+body {
+    font-family: "Montserrat", -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    color: var(--infinity-text);
+    background-color: var(--infinity-bg);
+}
+
+h1, h2, .font-weight-bold {
+    font-weight: 700 !important;
+}
+
+h3, h4, .font-weight-semi-bold {
+    font-weight: 600 !important;
+}
+
+h5, h6, .font-weight-medium {
+    font-weight: 500 !important;
+}
+
+.font-weight-normal {
+    font-weight: 400 !important;
+}
+
+/* Colors */
+.text-primary {
+    color: var(--infinity-primary) !important;
+}
+
+.bg-primary {
+    background-color: var(--infinity-primary) !important;
+}
+
+.text-secondary {
+    color: var(--infinity-secondary) !important;
+}
+
+.bg-secondary {
+    background-color: var(--infinity-secondary) !important;
+}
+
+.text-dark {
+    color: var(--infinity-dark) !important;
+}
+
+.bg-dark {
+    background-color: var(--infinity-dark) !important;
+}
+
+.text-body {
+    color: var(--infinity-text) !important;
+}
+
+/* Links */
+a {
+    color: var(--infinity-primary);
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+a:hover {
+    color: var(--infinity-primary-hover);
+    text-decoration: underline;
+}
+
+/* Buttons */
+.btn-primary {
+    background-color: var(--infinity-primary);
+    border-color: var(--infinity-primary);
+    color: var(--infinity-dark);
+}
+
+.btn-primary:hover {
+    background-color: var(--infinity-primary-hover);
+    border-color: var(--infinity-primary-hover);
+    color: var(--infinity-dark);
+}
+
+.btn-square {
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    text-align: center;
+}
+
+.btn-sm-square {
+    width: 28px;
+    height: 28px;
+}
+
+.btn-lg-square {
+    width: 46px;
+    height: 46px;
+}
+
+/* Navigation */
+.navbar-dark .navbar-nav .nav-link {
+    padding: 20px 15px;
+    color: var(--infinity-light);
+    font-weight: 500;
+    text-transform: uppercase;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.navbar-dark .navbar-nav .nav-link:hover,
+.navbar-dark .navbar-nav .nav-link.active {
+    color: var(--infinity-dark);
+    background: var(--infinity-primary);
+}
+
+@media (max-width: 991.98px) {
+    .navbar-dark .navbar-nav .nav-link {
+        padding: 8px 15px;
+    }
+}
+
+/* Section Title */
+.section-title {
+    margin-bottom: 15px;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--infinity-light);
+    border: 1px solid #dee2e6;
+    border-left: 5px solid var(--infinity-primary);
+}
+
+.section-title h4 {
+    margin: 0;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+/* Image Overlay Effect */
+.overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    padding: 30px;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-end;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0), var(--infinity-dark));
+    z-index: 1;
+    transition: all 0.3s ease;
+}
+
+.position-relative:hover .overlay {
+    background: linear-gradient(to bottom, rgba(30, 32, 36, 0.3), var(--infinity-dark));
+}
+
+/* Badge Styles */
+.badge-primary {
+    background-color: var(--infinity-primary);
+    color: var(--infinity-dark);
+}
+
+/* News Cards */
+.news-card {
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 30px;
+    background: var(--infinity-light);
+    transition: all 0.3s ease;
+}
+
+.news-card:hover {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transform: translateY(-5px);
+}
+
+.news-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.news-card:hover img {
+    transform: scale(1.05);
+}
+
+/* Post Meta */
+.post-meta {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 10px;
+    font-size: 0.875rem;
+}
+
+.post-meta a {
+    color: var(--infinity-text);
+    text-decoration: none;
+}
+
+.post-meta a:hover {
+    color: var(--infinity-primary);
+}
+
+/* Back to Top Button */
+.back-to-top {
+    position: fixed;
+    display: none;
+    right: 30px;
+    bottom: 30px;
+    z-index: 99;
+    background: var(--infinity-primary);
+    color: var(--infinity-dark);
+    width: 40px;
+    height: 40px;
+    border-radius: 4px;
+    text-align: center;
+    line-height: 40px;
+    transition: all 0.3s ease;
+}
+
+.back-to-top:hover {
+    background: var(--infinity-primary-hover);
+    color: var(--infinity-dark);
+}
+
+/* Responsive News Layout */
+@media (min-width: 768px) {
+    .news-lg {
+        height: 350px;
+    }
+    
+    .news-lg .border {
+        border-left: none !important;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .news-lg .border {
+        border-top: none !important;
+    }
+}
+
+/* WordPress Specific Styles */
+.site-header {
+    background: var(--infinity-light);
+    border-bottom: 1px solid #dee2e6;
+}
+
+.site-branding h1 {
+    margin: 0;
+    font-size: 2.5rem;
+    text-transform: uppercase;
+}
+
+.site-branding .text-primary {
+    color: var(--infinity-primary) !important;
+}
+
+.site-branding .text-secondary {
+    color: var(--infinity-secondary) !important;
+    font-weight: 400;
+}
+
+/* Widget Styles */
+.widget {
+    background: var(--infinity-light);
+    padding: 20px;
+    margin-bottom: 30px;
+}
+
+.widget-title {
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid var(--infinity-primary);
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+/* Comment Styles */
+.comment-list {
+    list-style: none;
+    padding: 0;
+}
+
+.comment-body {
+    background: var(--infinity-light);
+    padding: 20px;
+    margin-bottom: 20px;
+    border-left: 3px solid var(--infinity-primary);
+}
+
+/* Form Styles */
+input[type="text"],
+input[type="email"],
+input[type="url"],
+input[type="search"],
+textarea {
+    width: 100%;
+    padding: 10px 15px;
+    border: 1px solid #dee2e6;
+    background: var(--infinity-light);
+    color: var(--infinity-text);
+    transition: all 0.3s ease;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="url"]:focus,
+input[type="search"]:focus,
+textarea:focus {
+    border-color: var(--infinity-primary);
+    outline: none;
+}
+
+/* Pagination */
+.pagination {
+    display: flex;
+    gap: 5px;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.pagination a,
+.pagination span {
+    display: inline-block;
+    padding: 8px 15px;
+    background: var(--infinity-light);
+    color: var(--infinity-text);
+    border: 1px solid #dee2e6;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.pagination a:hover,
+.pagination .current {
+    background: var(--infinity-primary);
+    color: var(--infinity-dark);
+    border-color: var(--infinity-primary);
+}
+
+/* Utility Classes */
+.text-uppercase {
+    text-transform: uppercase !important;
+}
+
+.text-truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.position-relative {
+    position: relative !important;
+}
+
+.overflow-hidden {
+    overflow: hidden !important;
+}
+
+.d-flex {
+    display: flex !important;
+}
+
+.align-items-center {
+    align-items: center !important;
+}
+
+.justify-content-between {
+    justify-content: space-between !important;
+}
+
+.mb-2 {
+    margin-bottom: 0.5rem !important;
+}
+
+.mb-3 {
+    margin-bottom: 1rem !important;
+}
+
+.mb-4 {
+    margin-bottom: 1.5rem !important;
+}
+
+.py-3 {
+    padding-top: 1rem !important;
+    padding-bottom: 1rem !important;
+}
+
+.px-3 {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+}

@@ -1,81 +1,71 @@
     </main><!-- #main -->
 
-    <!-- ========== { FOOTER } ========== -->
-    <footer class="site-footer">
-        <div class="container">
-            <div class="footer-widgets">
-                <!-- À propos -->
-                <div class="footer-widget">
-                    <div class="site-branding">
-                        <?php
-                        if ( has_custom_logo() ) {
-                            the_custom_logo();
-                        } else {
-                            echo '<h2 class="footer-widget-title"><a href="' . esc_url( home_url( '/' ) ) . '" rel="home">' . get_bloginfo( 'name' ) . '</a></h2>';
-                        }
-                        ?>
-                        <?php if ( get_bloginfo( 'description' ) ) : ?>
-                            <p class="site-description"><?php echo esc_html( get_bloginfo( 'description' ) ); ?></p>
-                        <?php endif; ?>
-                    </div>
+    <!-- ========== { FOOTER - Infinity Blog } ========== -->
+    <!-- Footer Start -->
+    <div class="container-fluid bg-dark pt-5 px-sm-3 px-md-5 mt-5">
+        <div class="row py-4">
+            <div class="col-lg-3 col-md-6 mb-5">
+                <h5 class="mb-4 text-white text-uppercase font-weight-bold"><?php bloginfo( 'name' ); ?></h5>
+                <?php if ( get_bloginfo( 'description' ) ) : ?>
+                    <p class="font-weight-medium text-body"><?php echo esc_html( get_bloginfo( 'description' ) ); ?></p>
+                <?php endif; ?>
+                <div class="d-flex justify-content-start mt-4">
+                    <?php
+                    $social_links = array(
+                        'twitter'   => array( 'url' => get_theme_mod( 'infinity_blog_twitter' ), 'icon' => 'fab fa-twitter' ),
+                        'facebook'  => array( 'url' => get_theme_mod( 'infinity_blog_facebook' ), 'icon' => 'fab fa-facebook-f' ),
+                        'linkedin'  => array( 'url' => get_theme_mod( 'infinity_blog_linkedin' ), 'icon' => 'fab fa-linkedin-in' ),
+                        'instagram' => array( 'url' => get_theme_mod( 'infinity_blog_instagram' ), 'icon' => 'fab fa-instagram' ),
+                        'youtube'   => array( 'url' => get_theme_mod( 'infinity_blog_youtube' ), 'icon' => 'fab fa-youtube' ),
+                    );
                     
-                    <div class="social-links">
-                        <?php
-                        $social_links = array(
-                            'facebook'  => get_theme_mod( 'infinity_blog_facebook' ),
-                            'twitter'   => get_theme_mod( 'infinity_blog_twitter' ),
-                            'instagram' => get_theme_mod( 'infinity_blog_instagram' ),
-                            'youtube'   => get_theme_mod( 'infinity_blog_youtube' ),
-                            'linkedin'  => get_theme_mod( 'infinity_blog_linkedin' ),
-                        );
-                        
-                        foreach ( $social_links as $platform => $url ) {
-                            if ( ! empty( $url ) ) {
-                                echo '<a href="' . esc_url( $url ) . '" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="' . esc_attr( ucfirst( $platform ) ) . '">';
-                                echo '<span class="dashicons dashicons-' . esc_attr( $platform ) . '"></span>';
-                                echo '</a>';
-                            }
+                    foreach ( $social_links as $platform => $data ) {
+                        if ( ! empty( $data['url'] ) ) {
+                            echo '<a class="btn btn-lg btn-secondary btn-lg-square mr-2" href="' . esc_url( $data['url'] ) . '" target="_blank" rel="noopener noreferrer" aria-label="' . esc_attr( ucfirst( $platform ) ) . '">';
+                            echo '<i class="' . esc_attr( $data['icon'] ) . '"></i>';
+                            echo '</a>';
                         }
-                        ?>
-                    </div>
-                </div>
-                
-                <!-- Widgets du pied de page -->
-                <?php for ( $i = 1; $i <= 3; $i++ ) : ?>
-                    <?php if ( is_active_sidebar( 'footer-' . $i ) ) : ?>
-                        <div class="footer-widget">
-                            <?php dynamic_sidebar( 'footer-' . $i ); ?>
-                        </div>
-                    <?php endif; ?>
-                <?php endfor; ?>
-            </div>
-        </div>
-
-        <!-- Copyright -->
-        <div class="site-info">
-            <div class="container">
-                <div class="footer-copyright">
-                    <p>
-                        &copy; <?php echo date( 'Y' ); ?> 
-                        <a href="<?php echo esc_url( home_url( '/' ) ); ?>">
-                            <?php bloginfo( 'name' ); ?>
-                        </a>.
-                        <?php esc_html_e( 'Tous droits réservés.', 'infinity-blog' ); ?>
-                        
-                        <?php
-                        if ( function_exists( 'the_privacy_policy_link' ) ) {
-                            the_privacy_policy_link( '<span class="separator">|</span>' );
-                        }
-                        ?>
-                    </p>
+                    }
+                    ?>
                 </div>
             </div>
+            
+            <?php if ( is_active_sidebar( 'footer-1' ) ) : ?>
+                <div class="col-lg-3 col-md-6 mb-5">
+                    <?php dynamic_sidebar( 'footer-1' ); ?>
+                </div>
+            <?php endif; ?>
+            
+            <?php if ( is_active_sidebar( 'footer-2' ) ) : ?>
+                <div class="col-lg-3 col-md-6 mb-5">
+                    <?php dynamic_sidebar( 'footer-2' ); ?>
+                </div>
+            <?php endif; ?>
+            
+            <?php if ( is_active_sidebar( 'footer-3' ) ) : ?>
+                <div class="col-lg-3 col-md-6 mb-5">
+                    <?php dynamic_sidebar( 'footer-3' ); ?>
+                </div>
+            <?php endif; ?>
         </div>
-    </footer>
+    </div>
+    <div class="container-fluid py-4 px-sm-3 px-md-5" style="background: #111111;">
+        <p class="m-0 text-center text-body">
+            &copy; <?php echo date( 'Y' ); ?> 
+            <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="text-primary"><?php bloginfo( 'name' ); ?></a>. 
+            <?php esc_html_e( 'Tous droits réservés.', 'infinity-blog' ); ?>
+            <?php
+            if ( function_exists( 'the_privacy_policy_link' ) ) {
+                the_privacy_policy_link( ' | ' );
+            }
+            ?>
+        </p>
+    </div>
+    <!-- Footer End -->
 
-    <!-- Bouton de retour en haut -->
-    <a href="#page" class="back-to-top" aria-label="<?php esc_attr_e( 'Retour en haut', 'infinity-blog' ); ?>">
-        <span class="dashicons dashicons-arrow-up-alt2"></span>
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-primary btn-square back-to-top" aria-label="<?php esc_attr_e( 'Retour en haut', 'infinity-blog' ); ?>">
+        <i class="fa fa-arrow-up"></i>
     </a>
     
     <?php wp_footer(); ?>

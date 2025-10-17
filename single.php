@@ -10,48 +10,38 @@
 get_header();
 ?>
 
-<main id="primary" class="site-main">
-    <div class="container mx-auto px-4 py-8">
-        <div class="flex flex-wrap -mx-4">
-            <div class="w-full lg:w-2/3 px-4">
+<!-- News Detail Start -->
+<div class="container-fluid mt-5 pt-3">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
                 <?php
                 while ( have_posts() ) :
                     the_post();
                     ?>
-                    <article id="post-<?php the_ID(); ?>" <?php post_class( 'bg-white rounded-lg shadow-md overflow-hidden mb-8' ); ?>>
+                    <!-- News Detail -->
+                    <div class="position-relative mb-3">
                         <?php if ( has_post_thumbnail() ) : ?>
-                            <div class="post-thumbnail mb-6">
-                                <?php the_post_thumbnail( 'full', array( 'class' => 'w-full h-auto' ) ); ?>
-                            </div>
+                            <?php the_post_thumbnail( 'full', array( 'class' => 'img-fluid w-100', 'style' => 'object-fit: cover;' ) ); ?>
                         <?php endif; ?>
-
-                        <div class="p-6">
-                            <header class="entry-header mb-6">
+                        <div class="bg-white border border-top-0 p-4">
+                            <div class="mb-3">
                                 <?php
-                                if ( is_singular() ) :
-                                    the_title( '<h1 class="entry-title text-3xl font-bold text-gray-900 mb-4">', '</h1>' );
-                                else :
-                                    the_title( '<h2 class="entry-title text-2xl font-bold text-gray-900 mb-4"><a href="' . esc_url( get_permalink() ) . '" rel="bookmark">', '</a></h2>' );
-                                endif;
-
-                                if ( 'post' === get_post_type() ) :
-                                    ?>
-                                    <div class="entry-meta text-gray-600 text-sm mb-4">
-                                        <?php
-                                        infinity_blog_posted_on();
-                                        infinity_blog_posted_by();
-                                        ?>
-                                    </div>
-                                <?php endif; ?>
-                            </header>
-
+                                $categories = get_the_category();
+                                if ( ! empty( $categories ) ) {
+                                    echo '<a class="badge badge-primary text-uppercase font-weight-semi-bold p-2 mr-2" href="' . esc_url( get_category_link( $categories[0]->term_id ) ) . '">' . esc_html( $categories[0]->name ) . '</a>';
+                                }
+                                ?>
+                                <a class="text-body" href="<?php the_permalink(); ?>"><?php echo get_the_date(); ?></a>
+                            </div>
+                            <?php the_title( '<h1 class="mb-3 text-secondary text-uppercase font-weight-bold">', '</h1>' ); ?>
                             <div class="entry-content">
                                 <?php
                                 the_content(
                                     sprintf(
                                         wp_kses(
                                             /* translators: %s: Name of current post. Only visible to screen readers */
-                                            __( 'Continue reading<span class="screen-reader-text"> "%s"</span>', 'infinity-blog' ),
+                                            __( 'Continuer la lecture<span class="screen-reader-text"> "%s"</span>', 'infinity-blog' ),
                                             array(
                                                 'span' => array(
                                                     'class' => array(),
@@ -64,42 +54,91 @@ get_header();
 
                                 wp_link_pages(
                                     array(
-                                        'before' => '<div class="page-links">' . esc_html__( 'Pages:', 'infinity-blog' ),
+                                        'before' => '<div class="page-links mb-4">' . esc_html__( 'Pages:', 'infinity-blog' ),
                                         'after'  => '</div>',
                                     )
                                 );
                                 ?>
                             </div>
-
-                            <footer class="entry-footer mt-8 pt-6 border-t border-gray-200">
-                                <?php infinity_blog_entry_footer(); ?>
-                            </footer>
                         </div>
-                    </article>
+                        <div class="d-flex justify-content-between bg-white border border-top-0 p-4">
+                            <div class="d-flex align-items-center">
+                                <span class="ml-3"><i class="far fa-eye mr-2"></i><?php echo get_post_meta( get_the_ID(), 'post_views_count', true ) ?: '0'; ?></span>
+                                <span class="ml-3"><i class="far fa-comment mr-2"></i><?php comments_number( '0', '1', '%' ); ?></span>
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <?php
+                                $tags = get_the_tags();
+                                if ( $tags ) {
+                                    echo '<span class="mr-2"><i class="fas fa-tags mr-2"></i></span>';
+                                    foreach ( $tags as $tag ) {
+                                        echo '<a class="badge badge-primary text-uppercase font-weight-semi-bold mr-2 p-2" href="' . esc_url( get_tag_link( $tag->term_id ) ) . '">' . esc_html( $tag->name ) . '</a>';
+                                    }
+                                }
+                                ?>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- News Detail End -->
 
                     <?php
                     // If comments are open or we have at least one comment, load up the comment template.
                     if ( comments_open() || get_comments_number() ) :
-                        comments_template();
+                        ?>
+                        <div class="mb-3">
+                            <div class="section-title mb-0">
+                                <h4 class="m-0 text-uppercase font-weight-bold"><?php comments_number( 'Aucun commentaire', '1 Commentaire', '% Commentaires' ); ?></h4>
+                            </div>
+                            <div class="bg-white border border-top-0 p-4">
+                                <?php comments_template(); ?>
+                            </div>
+                        </div>
+                        <?php
                     endif;
 
-                    the_post_navigation(
-                        array(
-                            'prev_text' => '<span class="nav-subtitle">' . esc_html__( 'Previous:', 'infinity-blog' ) . '</span> <span class="nav-title">%title</span>',
-                            'next_text' => '<span class="nav-subtitle">' . esc_html__( 'Next:', 'infinity-blog' ) . '</span> <span class="nav-title">%title</span>',
-                        )
-                    );
+                    // Navigation entre articles
+                    $prev_post = get_previous_post();
+                    $next_post = get_next_post();
+                    if ( $prev_post || $next_post ) :
+                        ?>
+                        <div class="row">
+                            <?php if ( $prev_post ) : ?>
+                                <div class="col-md-6">
+                                    <a href="<?php echo esc_url( get_permalink( $prev_post->ID ) ); ?>" class="d-flex align-items-center text-decoration-none bg-white border p-3 mb-3">
+                                        <i class="fa fa-angle-left fa-2x text-primary mr-3"></i>
+                                        <div>
+                                            <small class="text-body d-block"><?php esc_html_e( 'Article précédent', 'infinity-blog' ); ?></small>
+                                            <h6 class="m-0 text-secondary"><?php echo esc_html( get_the_title( $prev_post->ID ) ); ?></h6>
+                                        </div>
+                                    </a>
+                                </div>
+                            <?php endif; ?>
+                            <?php if ( $next_post ) : ?>
+                                <div class="col-md-6">
+                                    <a href="<?php echo esc_url( get_permalink( $next_post->ID ) ); ?>" class="d-flex align-items-center text-decoration-none bg-white border p-3 mb-3">
+                                        <div class="text-right">
+                                            <small class="text-body d-block"><?php esc_html_e( 'Article suivant', 'infinity-blog' ); ?></small>
+                                            <h6 class="m-0 text-secondary"><?php echo esc_html( get_the_title( $next_post->ID ) ); ?></h6>
+                                        </div>
+                                        <i class="fa fa-angle-right fa-2x text-primary ml-3"></i>
+                                    </a>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+                        <?php
+                    endif;
 
                 endwhile; // End of the loop.
                 ?>
             </div>
 
-            <div class="w-full lg:w-1/3 px-4">
+            <div class="col-lg-4">
                 <?php get_sidebar(); ?>
             </div>
         </div>
     </div>
-</main>
+</div>
+<!-- News Detail End -->
 
 <?php
 get_footer();

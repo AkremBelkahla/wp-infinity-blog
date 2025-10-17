@@ -15,68 +15,94 @@
 get_header();
 ?>
 
-<div class="bg-white py-6">
-    <div class="xl:container mx-auto px-3 sm:px-4 xl:px-2">
-        <div class="flex flex-row flex-wrap">
-            <!-- Main Content -->
-            <div class="flex-shrink max-w-full w-full lg:w-2/3 overflow-hidden">
+<!-- News Section Start -->
+<div class="container-fluid">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
                 <?php if ( is_home() && ! is_front_page() ) : ?>
-                    <header class="mb-8">
-                        <h1 class="text-3xl font-bold text-gray-800"><?php single_post_title(); ?></h1>
-                    </header>
+                    <div class="section-title mb-0">
+                        <h4 class="m-0 text-uppercase font-weight-bold"><?php single_post_title(); ?></h4>
+                    </div>
                 <?php endif; ?>
 
-                <div class="flex flex-row flex-wrap -mx-3">
+                <div class="row">
                     <?php
                     if ( have_posts() ) :
+                        $post_count = 0;
                         /* Start the Loop */
                         while ( have_posts() ) :
                             the_post();
-                            ?>
-                            <div class="flex-shrink max-w-full w-full sm:w-1/2 lg:w-1/2 px-3 pb-6">
-                                <div class="flex flex-col h-full bg-white rounded-lg shadow hover:shadow-lg transition-shadow duration-300">
-                                    <?php if ( has_post_thumbnail() ) : ?>
-                                        <a href="<?php the_permalink(); ?>" class="block overflow-hidden rounded-t-lg">
-                                            <?php the_post_thumbnail( 'post-thumbnail', array( 'class' => 'w-full h-48 object-cover transition-transform duration-500 hover:scale-105' ) ); ?>
-                                        </a>
-                                    <?php endif; ?>
-                                    
-                                    <div class="p-6 flex-grow">
-                                        <?php the_title( '<h2 class="text-xl font-bold text-gray-800 mb-2 hover:text-red-600 transition-colors"><a href="' . esc_url( get_permalink() ) . '" rel="bookmark">', '</a></h2>' ); ?>
-                                        
-                                        <div class="text-sm text-gray-500 mb-4">
-                                            <span class="mr-4">
-                                                <i class="far fa-calendar-alt mr-1"></i>
-                                                <?php echo get_the_date(); ?>
-                                            </span>
-                                            <span>
-                                                <i class="far fa-user mr-1"></i>
-                                                <?php the_author_posts_link(); ?>
-                                            </span>
+                            $post_count++;
+                            
+                            // Premier article en grand
+                            if ( $post_count === 1 ) :
+                                ?>
+                                <div class="col-12">
+                                    <div class="position-relative overflow-hidden mb-3" style="height: 400px;">
+                                        <?php if ( has_post_thumbnail() ) : ?>
+                                            <?php the_post_thumbnail( 'large', array( 'class' => 'img-fluid h-100 w-100', 'style' => 'object-fit: cover;' ) ); ?>
+                                        <?php else : ?>
+                                            <img class="img-fluid h-100 w-100" src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/default.jpg' ); ?>" style="object-fit: cover;" alt="<?php the_title_attribute(); ?>">
+                                        <?php endif; ?>
+                                        <div class="overlay">
+                                            <div class="mb-2">
+                                                <?php
+                                                $categories = get_the_category();
+                                                if ( ! empty( $categories ) ) {
+                                                    echo '<a class="badge badge-primary text-uppercase font-weight-semi-bold p-2 mr-2" href="' . esc_url( get_category_link( $categories[0]->term_id ) ) . '">' . esc_html( $categories[0]->name ) . '</a>';
+                                                }
+                                                ?>
+                                                <a class="text-white" href="<?php the_permalink(); ?>"><small><?php echo get_the_date(); ?></small></a>
+                                            </div>
+                                            <a class="h2 m-0 text-white text-uppercase font-weight-bold" href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
                                         </div>
-                                        
-                                        <div class="text-gray-600 mb-4">
-                                            <?php the_excerpt(); ?>
-                                        </div>
-                                        
-                                        <a href="<?php the_permalink(); ?>" class="inline-block text-red-600 font-medium hover:text-red-700 transition-colors">
-                                            <?php _e( 'Read More', 'infinity-blog' ); ?>
-                                            <i class="fas fa-arrow-right ml-1"></i>
-                                        </a>
                                     </div>
                                 </div>
-                            </div>
-                            <?php
+                                <?php
+                            else :
+                                // Articles suivants en grille
+                                ?>
+                                <div class="col-lg-6">
+                                    <div class="position-relative overflow-hidden mb-3" style="height: 300px;">
+                                        <?php if ( has_post_thumbnail() ) : ?>
+                                            <?php the_post_thumbnail( 'medium_large', array( 'class' => 'img-fluid w-100 h-100', 'style' => 'object-fit: cover;' ) ); ?>
+                                        <?php else : ?>
+                                            <img class="img-fluid w-100 h-100" src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/default.jpg' ); ?>" style="object-fit: cover;" alt="<?php the_title_attribute(); ?>">
+                                        <?php endif; ?>
+                                        <div class="overlay">
+                                            <div class="mb-2">
+                                                <?php
+                                                $categories = get_the_category();
+                                                if ( ! empty( $categories ) ) {
+                                                    echo '<a class="badge badge-primary text-uppercase font-weight-semi-bold p-2 mr-2" href="' . esc_url( get_category_link( $categories[0]->term_id ) ) . '">' . esc_html( $categories[0]->name ) . '</a>';
+                                                }
+                                                ?>
+                                                <a class="text-white" href="<?php the_permalink(); ?>"><small><?php echo get_the_date(); ?></small></a>
+                                            </div>
+                                            <a class="h6 m-0 text-white text-uppercase font-weight-semi-bold" href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <?php
+                            endif;
                         endwhile;
                         
                         // Pagination
-                        the_posts_pagination( array(
-                            'mid_size'  => 2,
-                            'prev_text' => '<i class="fas fa-chevron-left"></i> ' . __( 'Previous', 'infinity-blog' ),
-                            'next_text' => __( 'Next', 'infinity-blog' ) . ' <i class="fas fa-chevron-right"></i>',
-                            'class'     => 'pagination flex justify-center mt-8',
-                        ) );
-                        
+                        ?>
+                        <div class="col-12">
+                            <nav aria-label="Page navigation">
+                                <?php
+                                the_posts_pagination( array(
+                                    'mid_size'  => 2,
+                                    'prev_text' => '<i class="fa fa-angle-left"></i> ' . __( 'Précédent', 'infinity-blog' ),
+                                    'next_text' => __( 'Suivant', 'infinity-blog' ) . ' <i class="fa fa-angle-right"></i>',
+                                    'class'     => 'pagination justify-content-center mb-4',
+                                ) );
+                                ?>
+                            </nav>
+                        </div>
+                        <?php
                     else :
                         get_template_part( 'template-parts/content', 'none' );
                     endif;
@@ -85,14 +111,13 @@ get_header();
             </div>
             
             <!-- Sidebar -->
-            <div class="flex-shrink max-w-full w-full lg:w-1/3 lg:pl-8 order-first lg:order-last">
-                <div class="w-full">
-                    <?php get_sidebar(); ?>
-                </div>
+            <div class="col-lg-4">
+                <?php get_sidebar(); ?>
             </div>
         </div>
     </div>
 </div>
+<!-- News Section End -->
 
 <?php
 get_footer();
