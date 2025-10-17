@@ -1,11 +1,11 @@
 <?php
 /**
- * The main template file
+ * Template Name: Page d'accueil
+ * 
+ * The front page template file
  *
- * This is the most generic template file in a WordPress theme
- * and one of the two required files for a theme (the other being style.css).
- * It is used to display a page when nothing more specific matches a query.
- * E.g., it puts together the home page when no home.php file exists.
+ * This template is used to display the home page with featured slider,
+ * featured news section, and latest news.
  *
  * @link https://developer.wordpress.org/themes/basics/template-hierarchy/
  *
