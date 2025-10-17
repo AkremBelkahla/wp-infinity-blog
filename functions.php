@@ -68,13 +68,6 @@ function infinity_blog_setup() {
     
     // Add support for block styles
     add_theme_support( 'wp-block-styles' );
-    
-    // Désactiver les styles de blocs par défaut de WordPress pour utiliser TailwindCSS
-    add_filter( 'should_load_separate_core_block_assets', '__return_false' );
-    
-    // Désactiver les styles de blocs par défaut de WordPress pour utiliser TailwindCSS
-    remove_filter( 'render_block', 'wp_render_layout_support_flag' );
-    remove_filter( 'render_block', 'gutenberg_render_layout_support_flag' );
 }
 add_action( 'after_setup_theme', 'infinity_blog_setup' );
 
@@ -278,19 +271,26 @@ function infinity_blog_infinite_scroll_render() {
  * Optimisation des performances
  */
 
-// Ajouter le préchargement DNS pour les ressources externes
-function infinity_blog_resource_hints( $urls, $relation_type ) {
+/**
+ * Ajouter le préchargement DNS pour les ressources externes
+ *
+ * @param array  $urls URLs to print for resource hints.
+ * @param string $relation_type The relation type the URLs are printed.
+ * @return array URLs to print for resource hints.
+ */
+function infinity_blog_performance_resource_hints( $urls, $relation_type ) {
     if ( 'dns-prefetch' === $relation_type ) {
         // Ajouter les domaines pour le préchargement DNS
         $urls[] = '//fonts.googleapis.com';
         $urls[] = '//fonts.gstatic.com';
-        $urls[] = '//ajax.googleapis.com';
     }
     return $urls;
 }
-add_filter( 'wp_resource_hints', 'infinity_blog_resource_hints', 10, 2 );
+add_filter( 'wp_resource_hints', 'infinity_blog_performance_resource_hints', 10, 2 );
 
-// Désactiver les emojis WordPress pour réduire les requêtes HTTP
+/**
+ * Désactiver les emojis WordPress pour réduire les requêtes HTTP
+ */
 function infinity_blog_disable_emojis() {
     remove_action( 'wp_head', 'print_emoji_detection_script', 7 );
     remove_action( 'admin_print_scripts', 'print_emoji_detection_script' );
@@ -304,16 +304,26 @@ function infinity_blog_disable_emojis() {
 }
 add_action( 'init', 'infinity_blog_disable_emojis' );
 
-// Désactiver les emojis dans TinyMCE
+/**
+ * Désactiver les emojis dans TinyMCE
+ *
+ * @param array $plugins TinyMCE plugins.
+ * @return array Filtered plugins.
+ */
 function infinity_blog_disable_emojis_tinymce( $plugins ) {
     if ( is_array( $plugins ) ) {
         return array_diff( $plugins, array( 'wpemoji' ) );
-    } else {
-        return array();
     }
+    return array();
 }
 
-// Supprimer le préchargement DNS pour les emojis
+/**
+ * Supprimer le préchargement DNS pour les emojis
+ *
+ * @param array  $urls URLs to print for resource hints.
+ * @param string $relation_type The relation type the URLs are printed.
+ * @return array Filtered URLs.
+ */
 function infinity_blog_disable_emojis_remove_dns_prefetch( $urls, $relation_type ) {
     if ( 'dns-prefetch' === $relation_type ) {
         $emoji_svg_url = apply_filters( 'emoji_svg_url', 'https://s.w.org/images/core/emoji/13.0.0/svg/' );
@@ -322,16 +332,23 @@ function infinity_blog_disable_emojis_remove_dns_prefetch( $urls, $relation_type
     return $urls;
 }
 
-// Optimiser le chargement des scripts
+/**
+ * Optimiser le chargement des scripts
+ *
+ * @param string $tag Script tag.
+ * @param string $handle Script handle.
+ * @param string $src Script source.
+ * @return string Modified script tag.
+ */
 function infinity_blog_defer_scripts( $tag, $handle, $src ) {
     // Liste des scripts à différer
     $defer_scripts = array( 
         'infinity-blog-mobile-menu',
-        'infinity-blog-navigation'
+        'infinity-blog-navigation',
     );
 
     // Ajouter l'attribut defer aux scripts spécifiés
-    if ( in_array( $handle, $defer_scripts ) ) {
+    if ( in_array( $handle, $defer_scripts, true ) ) {
         return str_replace( ' src', ' defer src', $tag );
     }
     
@@ -339,19 +356,26 @@ function infinity_blog_defer_scripts( $tag, $handle, $src ) {
 }
 add_filter( 'script_loader_tag', 'infinity_blog_defer_scripts', 10, 3 );
 
-// Ajouter le support pour le chargement paresseux des images
+/**
+ * Ajouter le support pour le chargement paresseux des images
+ *
+ * @param string $content Content with images.
+ * @return string Modified content.
+ */
 function infinity_blog_add_image_loading_lazy( $content ) {
     if ( is_admin() || empty( $content ) ) {
         return $content;
     }
     
     // Ne pas appliquer aux flux RSS ou aux extraits
-    if ( is_feed() || is_excerpt() ) {
+    if ( is_feed() ) {
         return $content;
     }
     
-    // Remplacer les attributs src par loading="lazy"
-    $content = preg_replace( '/(<img[^>]*?)\s?\/?>/i', '$1 loading="lazy" />', $content );
+    // Ajouter loading="lazy" aux images qui n'en ont pas déjà
+    if ( false === strpos( $content, 'loading=' ) ) {
+        $content = preg_replace( '/(<img[^>]+)(?<!\/)>/i', '$1 loading="lazy" />', $content );
+    }
     
     return $content;
 }

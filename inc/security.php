@@ -11,6 +11,29 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
+ * Obtenir l'adresse IP du client de manière sécurisée
+ *
+ * @return string L'adresse IP du client
+ */
+function infinity_blog_get_client_ip() {
+    $ip = '';
+    
+    if ( isset( $_SERVER['HTTP_CLIENT_IP'] ) && filter_var( $_SERVER['HTTP_CLIENT_IP'], FILTER_VALIDATE_IP ) ) {
+        $ip = sanitize_text_field( wp_unslash( $_SERVER['HTTP_CLIENT_IP'] ) );
+    } elseif ( isset( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) {
+        $ip_list = explode( ',', sanitize_text_field( wp_unslash( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) );
+        $ip = trim( $ip_list[0] );
+        if ( ! filter_var( $ip, FILTER_VALIDATE_IP ) ) {
+            $ip = '';
+        }
+    } elseif ( isset( $_SERVER['REMOTE_ADDR'] ) ) {
+        $ip = sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) );
+    }
+    
+    return filter_var( $ip, FILTER_VALIDATE_IP ) ? $ip : '0.0.0.0';
+}
+
+/**
  * Ajouter des en-têtes de sécurité
  */
 function infinity_blog_security_headers() {
@@ -26,8 +49,8 @@ function infinity_blog_security_headers() {
     // Référer Policy
     header( 'Referrer-Policy: strict-origin-when-cross-origin' );
     
-    // Content Security Policy - version basique
-    $csp = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' *.googleapis.com *.gstatic.com; style-src 'self' 'unsafe-inline' *.googleapis.com; img-src 'self' data: *.gravatar.com; font-src 'self' data: *.gstatic.com; connect-src 'self';";
+    // Content Security Policy - version améliorée sans unsafe-eval
+    $csp = "default-src 'self'; script-src 'self' 'unsafe-inline' *.googleapis.com *.gstatic.com; style-src 'self' 'unsafe-inline' *.googleapis.com; img-src 'self' data: *.gravatar.com *.wp.com; font-src 'self' data: *.gstatic.com; connect-src 'self';";
     header( "Content-Security-Policy: $csp" );
 }
 add_action( 'send_headers', 'infinity_blog_security_headers' );
@@ -100,8 +123,8 @@ function infinity_blog_login_limiter( $user, $username, $password ) {
         return $user;
     }
     
-    // Récupérer l'adresse IP
-    $ip = $_SERVER['REMOTE_ADDR'];
+    // Récupérer l'adresse IP de manière sécurisée
+    $ip = infinity_blog_get_client_ip();
     
     // Nombre maximum de tentatives
     $max_attempts = 5;
@@ -136,8 +159,8 @@ add_filter( 'authenticate', 'infinity_blog_login_limiter', 30, 3 );
  * Enregistrer les tentatives de connexion échouées
  */
 function infinity_blog_failed_login( $username ) {
-    // Récupérer l'adresse IP
-    $ip = $_SERVER['REMOTE_ADDR'];
+    // Récupérer l'adresse IP de manière sécurisée
+    $ip = infinity_blog_get_client_ip();
     
     // Nombre maximum de tentatives
     $max_attempts = 5;
@@ -169,7 +192,7 @@ add_action( 'wp_login_failed', 'infinity_blog_failed_login' );
  * Réinitialiser le compteur après une connexion réussie
  */
 function infinity_blog_login_success() {
-    $ip = $_SERVER['REMOTE_ADDR'];
+    $ip = infinity_blog_get_client_ip();
     delete_transient( 'failed_login_attempts_' . $ip );
     delete_transient( 'login_block_' . $ip );
 }
@@ -190,10 +213,16 @@ add_filter( 'the_content', 'infinity_blog_add_nonce_to_forms' );
 
 /**
  * Vérifier les nonces dans les formulaires
+ * Note: Cette fonction est désactivée par défaut car elle peut interférer avec d'autres plugins.
+ * Activez-la uniquement si vous utilisez des formulaires personnalisés avec le nonce infinity_blog_nonce.
  */
 function infinity_blog_verify_form_nonce() {
-    if ( isset( $_POST['infinity_blog_nonce'] ) && ! wp_verify_nonce( $_POST['infinity_blog_nonce'], 'infinity_blog_form_action' ) ) {
-        wp_die( __( 'Erreur de sécurité. Veuillez réessayer.', 'infinity-blog' ) );
+    // Vérifier uniquement si un nonce est présent et qu'il s'agit d'une requête POST
+    if ( ! empty( $_POST['infinity_blog_nonce'] ) ) {
+        if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['infinity_blog_nonce'] ) ), 'infinity_blog_form_action' ) ) {
+            wp_die( esc_html__( 'Erreur de sécurité. Veuillez réessayer.', 'infinity-blog' ) );
+        }
     }
 }
-add_action( 'init', 'infinity_blog_verify_form_nonce' );
+// Décommenter la ligne suivante pour activer la vérification des nonces
+// add_action( 'init', 'infinity_blog_verify_form_nonce' );

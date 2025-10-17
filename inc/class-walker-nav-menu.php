@@ -6,9 +6,24 @@
  */
 
 if ( ! class_exists( 'Infinity_Blog_Walker_Nav_Menu' ) ) {
-    
+    /**
+     * Custom Walker for navigation menus with TailwindCSS classes.
+     *
+     * @since 1.0.0
+     */
     class Infinity_Blog_Walker_Nav_Menu extends Walker_Nav_Menu {
         
+        /**
+         * Starts the element output.
+         *
+         * @since 1.0.0
+         *
+         * @param string   $output Used to append additional content (passed by reference).
+         * @param WP_Post  $item   Menu item data object.
+         * @param int      $depth  Depth of menu item. Used for padding.
+         * @param stdClass $args   An object of wp_nav_menu() arguments.
+         * @param int      $id     Current item ID.
+         */
         public function start_el( &$output, $item, $depth = 0, $args = null, $id = 0 ) {
             $indent = ( $depth ) ? str_repeat( "\t", $depth ) : '';
 
@@ -64,6 +79,15 @@ if ( ! class_exists( 'Infinity_Blog_Walker_Nav_Menu' ) ) {
             $output .= apply_filters( 'walker_nav_menu_start_el', $item_output, $item, $depth, $args );
         }
 
+        /**
+         * Starts the list before the elements are added.
+         *
+         * @since 1.0.0
+         *
+         * @param string   $output Used to append additional content (passed by reference).
+         * @param int      $depth  Depth of menu item. Used for padding.
+         * @param stdClass $args   An object of wp_nav_menu() arguments.
+         */
         public function start_lvl( &$output, $depth = 0, $args = null ) {
             $indent = str_repeat( "\t", $depth );
             $output .= "\n";
@@ -72,6 +96,15 @@ if ( ! class_exists( 'Infinity_Blog_Walker_Nav_Menu' ) ) {
             $output .= "\n";
         }
 
+        /**
+         * Ends the list of after the elements are added.
+         *
+         * @since 1.0.0
+         *
+         * @param string   $output Used to append additional content (passed by reference).
+         * @param int      $depth  Depth of menu item. Used for padding.
+         * @param stdClass $args   An object of wp_nav_menu() arguments.
+         */
         public function end_lvl( &$output, $depth = 0, $args = null ) {
             $indent = str_repeat( "\t", $depth );
             $output .= $indent . '</ul>' . "\n";

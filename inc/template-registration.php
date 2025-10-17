@@ -11,32 +11,23 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * Register custom page templates.
+ * 
+ * Note: Les templates FSE sont définis dans theme.json sous customTemplates.
+ * Cette fonction est conservée pour la compatibilité future si nécessaire.
  */
 function infinity_blog_register_page_templates() {
-    // Vérifier si la fonction est disponible (WordPress 5.8+)
-    if ( ! function_exists( 'wp_is_block_theme' ) || ! wp_is_block_theme() ) {
-        return;
-    }
+    // Les templates FSE sont maintenant gérés via theme.json
+    // Voir la section customTemplates dans theme.json
     
-    // Enregistrer le modèle de page Contact
-    $contact_template = array(
-        'slug'  => 'page-contact',
-        'title' => __( 'Page de contact', 'infinity-blog' ),
-        'postTypes' => array( 'page' ),
-    );
+    /**
+     * Filtre pour ajouter des templates personnalisés programmatiquement
+     * 
+     * @param array $templates Liste des templates personnalisés
+     */
+    $custom_templates = apply_filters( 'infinity_blog_custom_templates', array() );
     
-    // Enregistrer le modèle de page À propos
-    $about_template = array(
-        'slug'  => 'page-about',
-        'title' => __( 'Page à propos', 'infinity-blog' ),
-        'postTypes' => array( 'page' ),
-    );
-    
-    // Enregistrer les modèles si la fonction est disponible
-    if ( function_exists( 'wp_add_block_template' ) ) {
-        wp_add_block_template( 'infinity-blog//page-contact', $contact_template );
-        wp_add_block_template( 'infinity-blog//page-about', $about_template );
-    }
+    // Réservé pour une utilisation future si nécessaire
+    return $custom_templates;
 }
 add_action( 'init', 'infinity_blog_register_page_templates' );
 
@@ -71,6 +62,11 @@ add_action( 'init', 'infinity_blog_register_block_patterns', 9 );
  * Add block styles.
  */
 function infinity_blog_register_block_styles() {
+    // Vérifier si la fonction existe (WordPress 5.3+)
+    if ( ! function_exists( 'register_block_style' ) ) {
+        return;
+    }
+    
     // Styles de boutons
     register_block_style(
         'core/button',

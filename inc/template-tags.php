@@ -170,54 +170,70 @@ if ( ! function_exists( 'wp_body_open' ) ) {
  * Get post views count
  */
 if ( ! function_exists( 'infinity_blog_get_post_views' ) ) {
-function infinity_blog_get_post_views( $post_id ) {
-    $count_key = 'post_views_count';
-    $count = get_post_meta( $post_id, $count_key, true );
-    
-    if ( $count == '' ) {
-        delete_post_meta( $post_id, $count_key );
-        add_post_meta( $post_id, $count_key, '0' );
-        return '0';
+    /**
+     * Get post views count
+     *
+     * @param int $post_id Post ID.
+     * @return string Post views count.
+     */
+    function infinity_blog_get_post_views( $post_id ) {
+        $count_key = 'post_views_count';
+        $count = get_post_meta( $post_id, $count_key, true );
+        
+        if ( empty( $count ) ) {
+            delete_post_meta( $post_id, $count_key );
+            add_post_meta( $post_id, $count_key, '0' );
+            return '0';
+        }
+        
+        return $count;
     }
-    
-    return $count;
-}
 }
 
 /**
  * Set post views count
  */
 if ( ! function_exists( 'infinity_blog_set_post_views' ) ) {
-function infinity_blog_set_post_views( $post_id ) {
-    if ( is_single() ) {
-        $count_key = 'post_views_count';
-        $count = get_post_meta( $post_id, $count_key, true );
-        
-        if ( $count == '' ) {
-            $count = 0;
-            delete_post_meta( $post_id, $count_key );
-            add_post_meta( $post_id, $count_key, '0' );
-        } else {
-            $count++;
-            update_post_meta( $post_id, $count_key, $count );
+    /**
+     * Set post views count
+     *
+     * @param int $post_id Post ID.
+     */
+    function infinity_blog_set_post_views( $post_id ) {
+        if ( is_single() ) {
+            $count_key = 'post_views_count';
+            $count = get_post_meta( $post_id, $count_key, true );
+            
+            if ( empty( $count ) ) {
+                $count = 0;
+                delete_post_meta( $post_id, $count_key );
+                add_post_meta( $post_id, $count_key, '0' );
+            } else {
+                $count++;
+                update_post_meta( $post_id, $count_key, $count );
+            }
         }
     }
 }
-}
 
 if ( ! function_exists( 'infinity_blog_track_post_views' ) ) {
-function infinity_blog_track_post_views( $post_id ) {
-    if ( ! is_single() ) {
-        return;
+    /**
+     * Track post views
+     *
+     * @param int $post_id Post ID.
+     */
+    function infinity_blog_track_post_views( $post_id ) {
+        if ( ! is_single() ) {
+            return;
+        }
+        
+        if ( empty( $post_id ) ) {
+            global $post;
+            $post_id = $post->ID;
+        }
+        
+        infinity_blog_set_post_views( $post_id );
     }
-    
-    if ( empty( $post_id ) ) {
-        global $post;
-        $post_id = $post->ID;
-    }
-    
-    infinity_blog_set_post_views( $post_id );
-}
 }
 add_action( 'wp_head', 'infinity_blog_track_post_views' );
 
@@ -225,42 +241,56 @@ add_action( 'wp_head', 'infinity_blog_track_post_views' );
  * Get reading time
  */
 if ( ! function_exists( 'infinity_blog_reading_time' ) ) {
-function infinity_blog_reading_time( $post_id = null ) {
-    if ( ! $post_id ) {
-        global $post;
-        $post_id = $post->ID;
+    /**
+     * Get reading time
+     *
+     * @param int $post_id Post ID.
+     * @return string Reading time.
+     */
+    function infinity_blog_reading_time( $post_id = null ) {
+        if ( ! $post_id ) {
+            global $post;
+            $post_id = $post->ID;
+        }
+        
+        $content = get_post_field( 'post_content', $post_id );
+        $word_count = str_word_count( strip_tags( $content ) );
+        $reading_time = ceil( $word_count / 200 ); // Average reading speed: 200 words per minute
+        
+        /* translators: %d: reading time in minutes */
+        return sprintf( _n( '%d min read', '%d mins read', $reading_time, 'infinity-blog' ), $reading_time );
     }
-    
-    $content = get_post_field( 'post_content', $post_id );
-    $word_count = str_word_count( strip_tags( $content ) );
-    $reading_time = ceil( $word_count / 200 ); // Average reading speed: 200 words per minute
-    
-    return $reading_time . ' min read';
-}
 }
 
 /**
  * Get post excerpt
  */
 if ( ! function_exists( 'infinity_blog_get_excerpt' ) ) {
-function infinity_blog_get_excerpt( $limit = 20, $post_id = null ) {
-    if ( ! $post_id ) {
-        global $post;
-        $post_id = $post->ID;
+    /**
+     * Get post excerpt
+     *
+     * @param int $limit Word limit.
+     * @param int $post_id Post ID.
+     * @return string Excerpt.
+     */
+    function infinity_blog_get_excerpt( $limit = 20, $post_id = null ) {
+        if ( ! $post_id ) {
+            global $post;
+            $post_id = $post->ID;
+        }
+        
+        $excerpt = get_the_excerpt( $post_id );
+        $excerpt = explode( ' ', $excerpt, $limit + 1 );
+        
+        if ( count( $excerpt ) > $limit ) {
+            array_pop( $excerpt );
+            $excerpt = implode( ' ', $excerpt ) . '...';
+        } else {
+            $excerpt = implode( ' ', $excerpt );
+        }
+        
+        $excerpt = preg_replace( '`\[[^\]]*\]`', '', $excerpt );
+        
+        return $excerpt;
     }
-    
-    $excerpt = get_the_excerpt( $post_id );
-    $excerpt = explode( ' ', $excerpt, $limit );
-    
-    if ( count( $excerpt ) >= $limit ) {
-        array_pop( $excerpt );
-        $excerpt = implode( ' ', $excerpt ) . '...';
-    } else {
-        $excerpt = implode( ' ', $excerpt );
-    }
-    
-    $excerpt = preg_replace( '`\[[^\]]*\]`', '', $excerpt );
-    
-    return $excerpt;
-}
 }
